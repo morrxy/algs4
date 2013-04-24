@@ -7,6 +7,7 @@
  * to remove any duplicate keys in the whitelist after the sort.
  */
 import java.util.Arrays;
+import java.util.ArrayList;
 
 public class ex_1_1_28 {
     
@@ -15,6 +16,7 @@ public class ex_1_1_28 {
         int[] whitelist = In.readInts(args[0]);
         
         Arrays.sort(whitelist);
+        whitelist = removeDuplicate(whitelist);
         
         StdOut.println("whitelist:");
         for (int i : whitelist) {
@@ -47,6 +49,26 @@ public class ex_1_1_28 {
         
         return -1;
         
+    }
+
+    private static int[] removeDuplicate(int[] a) {
+        ArrayList<Integer> intlist = new ArrayList<Integer>();
+
+        intlist.add(a[0]);
+        for (int i = 1; i < a.length; i++) {
+            if (a[i] != a[i - 1]) {
+                intlist.add(a[i]);
+            }
+        }
+
+        int size = intlist.size();
+        int[] a1 = new int[size];
+
+        for (int i = 0; i < a1.length; i++) {
+            a1[i] = intlist.get(i);
+        }
+
+        return a1;
     }
     
 }
