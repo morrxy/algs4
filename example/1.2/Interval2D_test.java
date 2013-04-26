@@ -2,8 +2,6 @@
  * java Interval2D_test .2 .5 .5 .6 10000
  */
 
-import java.awt.Point;
-
 public class Interval2D_test {
 
  public static void main(String[] args) {
