@@ -4,7 +4,7 @@
  * .05 on the circumference of a circle, and then, with probability p for each pair of points, 
  * draws a gray line connecting them.
  *
- * java ex_1_1_31 10 .3
+ * java ex_1_1_31 10 .5
  */
 
 public class ex_1_1_31 {
@@ -15,9 +15,11 @@ public class ex_1_1_31 {
 
 	public static void main(String[] args) {
 
+		// set optionally pen color
 		StdDraw.setPenColor(StdDraw.LIGHT_GRAY);
-		// draw optionly a reference circle
-		// StdDraw.circle(CENTER.x(), CENTER.y(), RADIUS);
+
+		// draw optionally a reference circle
+		StdDraw.circle(CENTER.x(), CENTER.y(), RADIUS);
 
 		int N = Integer.parseInt(args[0]);
 		if (N <= 0) return;
@@ -63,18 +65,17 @@ public class ex_1_1_31 {
 
 		for (int j = 0; j < points.length; j++) {
 			// draw every point
-			StdDraw.setPenRadius(.05);
+			StdDraw.setPenRadius(.05); // set pen to draw point
 			points[j].draw();
 
 			// random connect each points of pair with probability
-			// k is next point in array to draw a line with j
-			int k = j + 1;
+			StdDraw.setPenRadius(); // set pen to draw line
+			int k = j + 1; // k is next point in array to draw a line with j
 			while(true) {
 				if (k > points.length - 1) {
 					break;
 				}
 				if (StdRandom.bernoulli(probability)) {
-					StdDraw.setPenRadius();
 					StdDraw.line(points[j].x(), points[j].y(), points[k].x(), points[k].y());
 				}
 				k += 1;
