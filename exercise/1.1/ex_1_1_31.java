@@ -4,45 +4,77 @@
  * .05 on the circumference of a circle, and then, with probability p for each pair of points, 
  * draws a gray line connecting them.
  *
- * java ex_1_1_31.java 10 .3
+ * java ex_1_1_31 10 .3
  */
 
 public class ex_1_1_31 {
 
-	public static final double CENTER_X = .5;
-	public static final double CENTER_Y = .5;
+	// circle's radius and center
 	public static final double RADIUS = .5;
-
+	public static final Point2D CENTER = new Point2D(.5, .5);
 
 	public static void main(String[] args) {
-		StdDraw.circle(CENTER_X, CENTER_Y, RADIUS);
+
+		StdDraw.setPenColor(StdDraw.LIGHT_GRAY);
+		// draw optionly a reference circle
+		// StdDraw.circle(CENTER.x(), CENTER.y(), RADIUS);
 
 		int N = Integer.parseInt(args[0]);
+		if (N <= 0) return;
+
+		// make points according N, CENTER, RADIUS
+		Point2D[] points = make_points(N, CENTER, RADIUS);
+
+		// draw points and line according probability
 		double probability = Double.parseDouble(args[1]);
-		Point2D[] points = new Point2D[N];
+		random_connect(points, probability);
 
-		StdDraw.setPenColor(StdDraw.RED);
-		StdDraw.setPenRadius(.05);
+	}
 
-		for (int i = 0; i < N; i++) {
-			double x1 = Math.random();
-			double y1 = Math.random();
-			points[i] = new Point2D(x1, y1);
-			points[i].draw();
+	public static Point2D[] make_points(int n, Point2D center, Double radius) {
+
+		Point2D[] points = new Point2D[n];
+		Point2D pt1;
+		double average_angel = 360 / n;
+		
+		for (int i = 0; i < n; i++) {
+			pt1 = calculate_point(center, radius, average_angel * i);
+			points[i] = new Point2D(pt1.x(), pt1.y());
 		}
 
-		StdDraw.setPenColor(StdDraw.ORANGE);
-		StdDraw.setPenRadius();
+		return points;
+
+	}
+
+	public static Point2D calculate_point(Point2D center, double radius, double angel) {
+
+		double arc = (angel * Math.PI) / 180;
+
+		double dx = RADIUS * Math.cos(arc);
+		double dy = RADIUS * Math.sin(arc);
+
+		Point2D p2d = new Point2D(center.x() + dx, center.y() + dy);
+
+		return p2d;
+
+	}
+
+	public static void random_connect(Point2D[] points, double probability) {
 
 		for (int j = 0; j < points.length; j++) {
+			// draw every point
+			StdDraw.setPenRadius(.05);
+			points[j].draw();
+
+			// random connect each points of pair with probability
 			// k is next point in array to draw a line with j
 			int k = j + 1;
-			// draw every line using point j and point after j in array
 			while(true) {
 				if (k > points.length - 1) {
 					break;
 				}
 				if (StdRandom.bernoulli(probability)) {
+					StdDraw.setPenRadius();
 					StdDraw.line(points[j].x(), points[j].y(), points[k].x(), points[k].y());
 				}
 				k += 1;
