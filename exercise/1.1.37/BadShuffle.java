@@ -1,17 +1,16 @@
 /*
- * exercise 1.1.36
- * Empirical shuffle check.  
- * Run computational experiments to check that our 
- * shufflng code on page 32 works as advertised. Write a program ShuffleTest that takes 
- * command-line arguments M and N, does N shuffles of an array of size M that is
- * initialized with a[i] = i before each shuffle, and prints an M-by-M table such that row i
- * gives the number of times i wound up in position j for all j. All entries in the array 
- * should be close to N/M.
+ * exercise 1.1.37
+ * Bad shuffling.  
+ * Suppose that you choose a random integer between 0 and N-i
+ * in our shuffling code instead of one between i and N-i. Show 
+ * that the resulting order is not equally likely to be one of 
+ * the N! possibilities. Run the test of the previous 
+ * exercise for this version.
  *
- * java ShuffleTest 10000 10
+ * java BadShuffle 10000 10
  */
 
-public class ShuffleTest {
+public class BadShuffle {
 
 	public static void main(String[] args) {
 		int N = Integer.parseInt(args[0]);
@@ -41,7 +40,8 @@ public class ShuffleTest {
 	public static void shuffle(int[] a) {
 		int N = a.length;
 		for (int i = 0; i < N; i++) {
-			int r = i + StdRandom.uniform(N-i);
+			// int r = i + StdRandom.uniform(N-i);
+			int r = StdRandom.uniform(N-i);
 			int temp = a[i];
 			a[i] = a[r];
 			a[r] = temp;
