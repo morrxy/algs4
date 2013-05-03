@@ -5,7 +5,7 @@
  * on page 48 and compare its running time on your computer with that of BinarySearch 
  * for largeW.txt and largeT.txt.
  *
- * java BruteForceSearch ../../data/largeW.txt ../../data/largeT.txt
+ * java BruteForceSearch largeW.txt largeT.txt
  * 367966 not in sorted whitelist
  * Binary search time: 0.25
  * 367966 not in whitelist
