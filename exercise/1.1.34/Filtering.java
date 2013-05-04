@@ -223,7 +223,7 @@ public class Filtering {
 		double[] arr = in.readAllDoubles();
 		in.close();
 
-		StdRandom.setSeed((long)0.12345678987654321);
+		StdRandom.setSeed(123456789);
 		StdRandom.shuffle(arr);
 
 		for (int i = 0; i < arr.length; i++) {

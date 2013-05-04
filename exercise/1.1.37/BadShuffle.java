@@ -23,7 +23,7 @@ public class BadShuffle {
 
 		int[][] position_dist = new int[M][M];
 
-		StdRandom.setSeed((long).123456);
+		StdRandom.setSeed(123456);
 		for (int i = 0; i < N; i++) {
 			shuffle(arr);
 			calculate_position_dist(arr, position_dist);

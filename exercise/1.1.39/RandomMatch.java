@@ -92,12 +92,12 @@ public class RandomMatch {
 
 		while(lo <= hi) {
 			int mid = lo + (hi - lo) / 2;
-			if (key == whitelist[mid]) {
-				return mid;
-			} else if (key < whitelist[mid]) {
+			if (key < whitelist[mid]) {
 				hi = mid - 1;
 			} else if (key > whitelist[mid]) {
 				lo = mid + 1;
+			} else {
+				return mid;
 			}
 		}
 
