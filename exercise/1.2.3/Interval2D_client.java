@@ -69,7 +69,7 @@ public class Interval2D_client {
 		int len = inters.length;
 
 		for (int i = 0; i <= len - 2; i++) {
-			for (int j = 0; j <= len - 1; j++) {
+			for (int j = i + 1; j <= len - 1; j++) {
 				if (all_overlap(inters[i], inters[j])) {
 					count += 1;
 				}
@@ -81,11 +81,16 @@ public class Interval2D_client {
 
 	public static boolean all_overlap(Interval1D[] int1, Interval1D[] int2) {
 		// boolean result = false;
+		
+		Interval1D x1 = int1[0];
+		Interval1D y1 = int1[1];
+		Interval1D x2 = int2[0];
+		Interval1D y2 = int2[1];
 
-		if (int1[0].left() != int2[0].left()) return false;
-		if (int1[0].right() != int2[0].right()) return false;
-		if (int1[1].left() != int2[1].left()) return false;
-		if (int1[1].right() != int2[1].right()) return false;
+		if (x1.left() != x2.left()) return false;
+		if (x1.right() != x2.right()) return false;
+		if (y1.left() != y2.left()) return false;
+		if (y1.right() != y2.right()) return false;
 
 		return true;
 	}
