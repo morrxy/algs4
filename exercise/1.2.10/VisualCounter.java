@@ -14,8 +14,9 @@
 public class VisualCounter {
 
 	private int count = 0;
-	/**  */
+	/** current exp times */
 	private int timesOfExp = 0;
+	/** maximum absolute value this counter support */
 	private int maxCount;
 
 	public VisualCounter(int N, int max) {
