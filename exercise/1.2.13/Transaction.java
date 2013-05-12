@@ -1,5 +1,5 @@
 /** 
- * 1.2.13 Usingourimplementation of Dateasamodel(page91),
+ * 1.2.13 Using our implementation of Dateasamodel(page91),
  * develop an implementation of Transaction.
  *
  * java Transaction
