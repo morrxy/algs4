@@ -5,9 +5,14 @@
  * Sunday, giving the appropriate day of the week for the date.
  * You may assume that the date is in the 21st century.
  *
- * java SmartDate 3 1 2011
+ * java SmartDate 5 11 2013
+ * 5/11/2013
+ * Saturday
  * 
  */
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class SmartDate {
 
@@ -47,8 +52,27 @@ public class SmartDate {
 		return month() + "/" + day() + "/" + year();
 	}
 
-	public String dayOfTheWeek(SmartDate date) {
-		
+	public static String dayOfTheWeek(int y, int m, int d) {
+
+	    Calendar cal = Calendar.getInstance();
+
+        /*
+        set(int year, int month, int date)
+        Jan=0,Feb=1,Mar=2...
+        */
+        cal.set(y, m - 1, d);
+
+        String[] strDays = new String[]{
+        	"Sunday",
+        	"Monday",
+        	"Tuesday",
+        	"Wednesday",
+        	"Thusday",
+        	"Friday",
+        	"Saturday"
+        };
+
+	    return strDays[cal.get(Calendar.DAY_OF_WEEK) - 1];
 	}
 
 	public static void main(String[] args) {
@@ -56,8 +80,10 @@ public class SmartDate {
 		int d = Integer.parseInt(args[1]);
 		int y = Integer.parseInt(args[2]);
 		SmartDate date = new SmartDate(m, d, y);
+
 		StdOut.println(date);
-		StdOut.dayOfTheWeek(date);
+
+		StdOut.println(dayOfTheWeek(y, m, d));
 	}
 
 }
