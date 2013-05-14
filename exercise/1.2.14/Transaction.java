@@ -34,8 +34,8 @@ public class Transaction {
 		if (x == null) return false;
 		if (this.getClass() != x.getClass()) return false;
 		Transaction that = (Transaction) x;
-		if (this.who != that.who) return false;
-		if (this.when != that.when) return false;
+		if (!this.who.equals(that.who)) return false;
+		if (!this.when.equals(that.when)) return false;
 		if (this.amount != that.amount) return false;
 		return true;
 	}

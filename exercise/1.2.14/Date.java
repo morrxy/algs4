@@ -29,6 +29,22 @@ public class Date{
 		return month() + "/" + day() + "/" + year();
 	}
 
+	public boolean equals(Object x) {
+		if (this == x) {
+			return true;
+		}
+		if (x == null) {
+			return false;
+		}
+		if (this.getClass() != x.getClass()) {
+			return false;
+		}
+
+		Date that = (Date) x;
+
+		return (this.year == that.year) && (this.month == that.month) && (this.day == that.day);
+	}
+
 	public static void main(String[] args) {
 		int m = Integer.parseInt(args[0]);
 		int d = Integer.parseInt(args[1]);
