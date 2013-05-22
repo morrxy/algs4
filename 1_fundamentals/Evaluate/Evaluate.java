@@ -1,5 +1,5 @@
 /**
- * java  Evaluate 
+ * java Evaluate 
  * ( 1 + ( ( 2 + 3 ) * ( 4 * 5 ) ) ) 
  * 101.0
  *
@@ -28,6 +28,7 @@ public class Evaluate {
 				else if (op.equals("-")) v = vals.pop() - v;
 				else if (op.equals("*")) v = vals.pop() * v;
 				else if (op.equals("/")) v = vals.pop() / v;
+				else if (op.equals("sqrt")) v = Math.sqrt(v);
 				vals.push(v);
 			} // Token not operator or paren: push double value.
 			else vals.push(Double.parseDouble(s));
