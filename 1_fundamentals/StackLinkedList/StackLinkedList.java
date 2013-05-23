@@ -74,6 +74,10 @@ public class StackLinkedList<Item> implements Iterable<Item> {
 		}
 
 		StdOut.println("(" + s.size() + " left on stack)");
+
+		for (String str : s) {
+			StdOut.println(str);
+		}
 	}
 
 }
