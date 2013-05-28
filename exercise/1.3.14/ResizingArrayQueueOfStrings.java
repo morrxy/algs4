@@ -1,6 +1,6 @@
 /** 
  * 1.3.14 Develop a class ResizingArrayQueueOfStrings that implements
- * the queue abstraction with a ﬁxedsize array, and then extend your
+ * the queue abstraction with a fixedsize array, and then extend your
  * implementation to use array resizing to remove the size restriction.
  *
  * java ResizingArrayQueueOfStrings < tobe.txt
