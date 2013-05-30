@@ -34,34 +34,25 @@ public class LinklistRemoveAfter<Item> implements Iterable<Item> {
 
 	public void deleteAfter(Item key) {
 		Node keynode = find(key);
-		// StdOut.println(keynode.item);
-		// StdOut.println(keynode.next);
 		removeAfter(keynode);
 	}
 
 	private Node find(Item key) {
-		if (N == 0) { return null; }
 		Node current = first;
 		Node result = null;
-		while (true) {
+		for (int i = 0; i < N; i++) {
 			if (current.item.equals(key)) {
 				result = current;
 				break;
 			} else {
-				if (current.next == null) {
-					break;
-				} else {
-					current = current.next;
-				} 
+				current = current.next;
 			}
 		}
-		StdOut.println(result.item);
-		StdOut.println(result.next);
 		return result;
 	}
 
 	private void removeAfter(Node nd) {
-		if (nd.next == null || nd == null) return;
+		if (nd == null || nd.next == null) return;
 		// the node after nd is last node
 		if (nd.next.next == null) {
 			nd.next = null;
