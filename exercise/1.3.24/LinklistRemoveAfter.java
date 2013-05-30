@@ -1,8 +1,13 @@
 /**
  * 1.3.24  Write a method removeAfter() that takes a linked-list 
  * Node as argument and removes the node following the given one 
- * (and does nothing if the argument or the next ﬁeld in the 
+ * (and does nothing if the argument or the next field in the 
  * argument node is null).
+ *
+ * java LinklistRemoveAfter or
+ * to be or not
+ * ctrl+z / ctrl+d
+ * to be not
  * 
  */
 
@@ -14,7 +19,7 @@ public class LinklistRemoveAfter<Item> implements Iterable<Item> {
 	private Node last = null;
 	private int N = 0;
 
-	public class Node {
+	private class Node {
 		Item item;
 		Node next;
 	}
@@ -27,7 +32,35 @@ public class LinklistRemoveAfter<Item> implements Iterable<Item> {
 		return N;
 	}
 
-	public void removeAfter(Node nd) {
+	public void deleteAfter(Item key) {
+		Node keynode = find(key);
+		// StdOut.println(keynode.item);
+		// StdOut.println(keynode.next);
+		removeAfter(keynode);
+	}
+
+	private Node find(Item key) {
+		if (N == 0) { return null; }
+		Node current = first;
+		Node result = null;
+		while (true) {
+			if (current.item.equals(key)) {
+				result = current;
+				break;
+			} else {
+				if (current.next == null) {
+					break;
+				} else {
+					current = current.next;
+				} 
+			}
+		}
+		StdOut.println(result.item);
+		StdOut.println(result.next);
+		return result;
+	}
+
+	private void removeAfter(Node nd) {
 		if (nd.next == null || nd == null) return;
 		// the node after nd is last node
 		if (nd.next.next == null) {
@@ -83,29 +116,15 @@ public class LinklistRemoveAfter<Item> implements Iterable<Item> {
 			q.enqueue(StdIn.readString());
 		}
 
-		Node keynode = new Node();
-		keynode.item = args[0];
+		String key = args[0];
 
-		q.removeAfter(keynode);
+		q.deleteAfter(key);
 
-		// StdOut.println("before removeLastNode:");
-		// StdOut.println("size:" + q.size());
+		for (String str : q) {
+			StdOut.print(str + " ");
+		}
+		StdOut.println("");
 
-		// for (String str : q) {
-		// 	StdOut.print(str + " ");
-		// }
-		// StdOut.println("");
-
-		// int k = Integer.parseInt(args[0]);
-		// q.delete(k);
-
-		// StdOut.println("after removeLastNode:");
-		// StdOut.println("size:" + q.size());
-
-		// for (String str : q) {
-		// 	StdOut.print(str + " ");
-		// }
-		// StdOut.println("");
 	}
 
 
