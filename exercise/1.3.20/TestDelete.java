@@ -1,17 +1,11 @@
 /**
- * 1.3.19   Give a code fragment that removes the last node 
- * in a linked list whose first node is first.
- *
- * java Queue2
- * to be or not
- * ctrl+z / ctrl+d
- * to be or
- * 
+ * 1.3.20 Write a method delete() that takes an int 
+ * argument k and deletes the kth element in a linked list, if it exists.
  */
 
 import java.util.Iterator;
 
-public class Queue2<Item> implements Iterable<Item> {
+public class TestDelete<Item> implements Iterable<Item> {
 
 	private Node first = null;
 	private Node last = null;
@@ -67,23 +61,35 @@ public class Queue2<Item> implements Iterable<Item> {
 		}
 	}
 
-	public void removeLastNode() {
-		if (N == 0) {
-			return;
+	public void delete(int k) {
+		if (k > N) {
+			StdOut.println("kth item don't exist");
+		} else if (N == 0) {
+			StdOut.println("the linked list is empty");
 		} else if (N == 1) {
 			first = null;
 			last = null;
 			N--;
 		} else {
-			Node beforeLast = first;
-			while (true) {
-				if (beforeLast.next.next == null) break;
-				beforeLast = beforeLast.next;
-			}
-			beforeLast.next = null;
-			N--;
+			
 		}
 	}
+
+	// public void removeLastNode() {
+	// 	if (N == 0) {
+	// 		return;
+	// 	} else if (N == 1) {
+	// 		first = null;
+	// 		last = null;
+	// 	} else {
+	// 		Node beforeLast = first;
+	// 		while (true) {
+	// 			if (beforeLast.next.next == null) break;
+	// 			beforeLast = beforeLast.next;
+	// 		}
+	// 		beforeLast.next = null;
+	// 	}
+	// }
 
 	public static void main(String[] args) {
 		Queue2<String> q = new Queue2<String>();
@@ -93,7 +99,6 @@ public class Queue2<Item> implements Iterable<Item> {
 		}
 
 		StdOut.println("before removeLastNode:");
-		StdOut.println("size:" + q.size());
 		for (String str : q) {
 			StdOut.print(str + " ");
 		}
@@ -101,7 +106,6 @@ public class Queue2<Item> implements Iterable<Item> {
 		q.removeLastNode();
 
 		StdOut.println("\nafter removeLastNode:");
-		StdOut.println("size:" + q.size());
 		for (String str : q) {
 			StdOut.print(str + " ");
 		}
