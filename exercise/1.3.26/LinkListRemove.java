@@ -47,8 +47,8 @@ public class LinkListRemove<Item> implements Iterable<Item> {
 	}
 
 	public void remove(LinkListRemove<Item> q, Item key) {
-		// q.removeKey0(key);
-		q.removeKey2(key);
+		q.removeKey0(key);
+		q.removeKey1(key);
 	}
 
 	private void removeKey0(Item key) {
