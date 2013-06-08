@@ -1,7 +1,7 @@
 /**
  * 1.3.26  Write a method remove() that takes a linked list 
  * and a string key as arguments and removes all of the nodes 
- * in the list that have key as its item ﬁeld.
+ * in the list that have key as its item field.
  *
  * java LinkListRemove to
  * to be or to not
@@ -47,7 +47,52 @@ public class LinkListRemove<Item> implements Iterable<Item> {
 	}
 
 	public void remove(LinkListRemove<Item> q, Item key) {
-		q.removeKey(key);
+		// q.removeKey0(key);
+		q.removeKey2(key);
+	}
+
+	private void removeKey0(Item key) {
+		for (Node current = first; current != null; current = current.next) {
+			if (current.item.equals(key)) {
+				first = current.next;
+				N--;
+			} else {
+				break;
+			}
+		}
+	}
+
+	private void removeKey1(Item key) {
+		for (Node current = first; current != null; current = current.next) {
+			// StdOut.println(current.item);
+			if (current.next == null) break;
+			if (current.next.item.equals(key)) {
+				if (current.next.next != null) {
+					current.next = current.next.next;
+					N--;
+				} else {
+					current.next = null;
+					N--;
+					// break;
+				}
+			}
+		}
+	}
+
+	private void removeKey2(Item key) {
+		Node before = null;
+		Node current = first;
+		while (current != null) {
+			if (current.item.equals(key)) {
+				if (current.next == null) {
+					before.next = null;
+				} else {
+					before.next = current.next;
+				}
+			}
+			before = current;
+			current = current.next;
+		}
 	}
 
 	private void removeKey(Item key) {
@@ -92,20 +137,6 @@ public class LinkListRemove<Item> implements Iterable<Item> {
 		// 	current = current.next;
 		// }
 
-		// for (int i = 0; i < N; i++) {
-		// 	// StdOut.println(current.item);
-		// 	if (current.item.equals(key)) {
-		// 		StdOut.println(key);
-		// 		before.next = current.next;
-
-		// 		before = current;
-		// 		current = current.next;
-
-		// 		N--;
-		// 	}
-		// 	before = current;
-		// 	current = current.next;
-		// }
 	}
 
 	public Iterator<Item> iterator() {
