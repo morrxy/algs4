@@ -4,7 +4,13 @@
  * in the list that have key as its item field.
  *
  * java LinkListRemove to
- * to be or to not
+ * to to be or to to go to to to die
+ * ^z / ^d
+ * before remove:
+ * to to be or to to go to to to die
+ * result of remove:
+ * be or go die
+ * size: 4
  * 
  */
 
@@ -47,11 +53,12 @@ public class LinkListRemove<Item> implements Iterable<Item> {
 	}
 
 	public void remove(LinkListRemove<Item> q, Item key) {
-		q.removeKey0(key);
-		q.removeKey1(key);
+		q.removeConsecutiveKeysFromFirst(key);
+		q.removeKeysAfterFirst(key);
 	}
 
-	private void removeKey0(Item key) {
+	// remove Consecutive Keys From First,after processed,the linklist begin with a non-key node or is empty
+	private void removeConsecutiveKeysFromFirst(Item key) {
 		for (Node current = first; current != null; current = current.next) {
 			if (current.item.equals(key)) {
 				first = current.next;
@@ -62,81 +69,33 @@ public class LinkListRemove<Item> implements Iterable<Item> {
 		}
 	}
 
-	private void removeKey1(Item key) {
-		for (Node current = first; current != null; current = current.next) {
-			// StdOut.println(current.item);
-			if (current.next == null) break;
-			if (current.next.item.equals(key)) {
-				if (current.next.next != null) {
-					current.next = current.next.next;
-					N--;
-				} else {
-					current.next = null;
-					N--;
-					// break;
-				}
-			}
-		}
-	}
+	// before process,the linklist is begin with a non-key node or is empty because removeConsecutiveKeysFromFirst() have been invoked
+	private void removeKeysAfterFirst(Item key) {
+		// if linklist is empty do nothing
+		if (first == null) return; 
 
-	private void removeKey2(Item key) {
-		Node before = null;
+		// the link has 1 node at least and that node is non-key node
 		Node current = first;
-		while (current != null) {
-			if (current.item.equals(key)) {
-				if (current.next == null) {
-					before.next = null;
+		while (true) {
+			if (current == null) { break; }
+
+			// find the non-key node "Node after" after current node
+			Node after = current.next;
+			while(after != null) {
+				if (after.item.equals(key)) {
+					after = after.next;
+					N--;
 				} else {
-					before.next = current.next;
+					break;
 				}
 			}
-			before = current;
-			current = current.next;
+
+			// modify current node's next field to the fineed node
+			current.next = after;
+
+			// process that non-key node
+			current = after;
 		}
-	}
-
-	private void removeKey(Item key) {
-
-		// Node newFirst = null;
-		// Node newLast = null;
-		// int K = 0;
-
-		// Node current = first;
-		// for (int i = 0; i < N; i++) {
-		// 	if (current.item.equals(key)) {
-		// 		K += 1;
-		// 		if (K == 1) {
-
-		// 		}
-		// 	}
-		// }
-
-		// if (N == 0) {
-		// 	return;
-		// } else if (N == 1) {
-		// 	if (first.item.equals(key)) {
-		// 		first = null;
-		// 		last = null;
-		// 		N--;
-		// 	}
-		// } else {
-
-		// }
-
-		// Node before = null;
-		// Node current = first;
-
-		// while (current.next != null) {
-		// 	StdOut.println(current.item);
-
-		// 	if (current.item.equals(key)) {
-		// 		current
-		// 	}
-
-		// 	before = current;
-		// 	current = current.next;
-		// }
-
 	}
 
 	public Iterator<Item> iterator() {
@@ -159,33 +118,6 @@ public class LinkListRemove<Item> implements Iterable<Item> {
 		}
 	}
 
-	public void delete(int k) {
-		if (k > N || N == 0) {
-			StdOut.println("the " + k + "th item don't exist");
-		} else if (N == 1) {
-			first = null;
-			last = null;
-			N--;
-		} else {
-			// find the node before the kth node
-			Node nodeBeforeK = first;
-			for (int i = 1; i <= k - 2; i++) {
-				nodeBeforeK = nodeBeforeK.next;
-			}
-
-			// remove the kth node
-			if (nodeBeforeK.next.next == null) { // k is the last node
-				nodeBeforeK.next = null;
-				N--;
-			} else { // k is not the last noded
-				nodeBeforeK.next = nodeBeforeK.next.next;
-				N--;
-			}
-			
-		}
-	}
-
-
 	public static void main(String[] args) {
 
 		LinkListRemove<String> q = new LinkListRemove<String>();
@@ -194,13 +126,21 @@ public class LinkListRemove<Item> implements Iterable<Item> {
 			q.enqueue(StdIn.readString());
 		}
 
-		String key = args[0];
-		q.remove(q, key);
-
+		StdOut.println("before remove:");
 		for (String str : q) {
 			StdOut.print(str + " ");
 		}
 		StdOut.println("");
+
+		String key = args[0];
+		q.remove(q, key);
+
+		StdOut.println("result of remove:");
+		for (String str : q) {
+			StdOut.print(str + " ");
+		}
+		StdOut.println("");
+		StdOut.println("size: " + q.size());
 	}
 
 }
