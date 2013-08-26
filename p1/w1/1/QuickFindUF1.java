@@ -31,15 +31,15 @@ public class QuickFindUF1
   }
 
   public static void main(String[] args) {
-    int N = 10c;
+    int N = 10;
     QuickFindUF1 uf = new QuickFindUF1(N);
 
-    uf.union(2, 7);
-    uf.union(3, 8);
-    uf.union(2, 0);
-    uf.union(4, 5);
+    uf.union(8, 5);
+    uf.union(5, 4);
     uf.union(9, 6);
-    uf.union(7, 5);
+    uf.union(6, 5);
+    uf.union(1, 2);
+    uf.union(0, 7);
 
     uf.show();
 

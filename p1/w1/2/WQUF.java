@@ -53,15 +53,15 @@ public class WQUF
     int N = 10;
     WQUF uf = new WQUF(N);
 
-    uf.union(7, 1);
+    uf.union(8, 4);
+    uf.union(5, 0);
+    uf.union(6, 3);
+    uf.union(8, 6);
+    uf.union(0, 7);
+    uf.union(2, 5);
+    uf.union(0, 9);
+    uf.union(1, 6);
     uf.union(2, 4);
-    uf.union(4, 8);
-    uf.union(6, 4);
-    uf.union(0, 5);
-    uf.union(4, 9);
-    uf.union(3, 8);
-    uf.union(0, 1);
-    uf.union(2, 1);
 
     uf.show();
 

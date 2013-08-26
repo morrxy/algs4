@@ -74,7 +74,7 @@ public class LinkedListReverseIterative<Item> implements Iterable<Item> {
 	}
 
 	public void reverseList() {
-		first = reverse(first);
+		first = reverse_book(first);
 	}
 
 	public Node reverse(Node x) {
