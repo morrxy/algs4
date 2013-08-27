@@ -23,18 +23,18 @@ public class WQUF
 
   public boolean connected(int p, int q)
   {
-    return id[p] == id[q];
+    return root(p) == root(q);
   }
 
-  private int find(int p) {
+  private int root(int p) {
     while (p != id[p]) p = id[p];
     return p;
   }
 
   public void union(int p, int q)
   {
-    int i = find(p);
-    int j = find(q);
+    int i = root(p);
+    int j = root(q);
     if (i == j) return;
 
     if (sz[i] < sz[j]) { id[i] = j; sz[j] += sz[i]; }
