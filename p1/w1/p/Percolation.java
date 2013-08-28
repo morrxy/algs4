@@ -1,41 +1,64 @@
 public class Percolation {
-  private WeightedQuickUnionUF uf;
-  // siteStatus[i] is true means that the site is open,false is block
-  private boolean[] siteStatus;
-  private int SIZE;
-  private int VIRTUAL_TOP;
-  private int VIRTUAL_BOTTOM;
-  private WeightedQuickUnionUF ufForIsFull;
 
-  /** create N-by-N grid, with all sites blocked */
+  // UF used for test weather percolates
+  private WeightedQuickUnionUF ufForTestPercolate;
+
+  // UF used for test weather a given site is connected
+  // to an open site in the top row
+  private WeightedQuickUnionUF ufForTestFull;
+
+  // siteStatus stores every site's open or block status
+  // true means open,false means block
+  private boolean[] siteStatus;
+
+  // percolation experiment's grid width and height
+  private int SIZE;
+
+  // 1D index of the virtual site connected to all sites in first row
+  private int VIRTUAL_TOP;
+
+  // 1D index of the virtual site connected to all sites in last row
+  private int VIRTUAL_BOTTOM;
+
+  // create N-by-N grid, with all sites blocked
   public Percolation(int N) {
     SIZE = N;
+
     // the last two site for VIRTUAL_TOP and VIRTUAL_BOTTOM
-    uf = new WeightedQuickUnionUF(SIZE * SIZE + 2);
+    ufForTestPercolate = new WeightedQuickUnionUF(SIZE * SIZE + 2);
+
+    // the last site is for VIRTUAL_TOP
+    ufForTestFull = new WeightedQuickUnionUF(SIZE * SIZE + 1);
+
     VIRTUAL_TOP = SIZE * SIZE;
     VIRTUAL_BOTTOM = SIZE * SIZE + 1;
 
-    // initialize all site blocked
+    // initialize all site status blocked
     siteStatus = new boolean[SIZE*SIZE + 2];
     for (int i = 0; i < SIZE*SIZE; i++) {
       siteStatus[i] = false;
     }
-    // initialize two virtual site open
+
+    // initialize the two virtual sites open
     siteStatus[VIRTUAL_TOP] = true;
     siteStatus[VIRTUAL_BOTTOM] = true;
 
+    // for the UF for test percolate and the UF for test full
     // connect each site in first row to VIRTUAL_TOP
     for (int i = 0; i < SIZE; i++) {
-      uf.union(VIRTUAL_TOP, i);
+      ufForTestPercolate.union(VIRTUAL_TOP, i);
+      ufForTestFull.union(VIRTUAL_TOP, i);
     }
 
+    // only for the UF used for test percolate
     // connect each site in last row to VIRTUAL_BOTTOM
     for (int i = (SIZE-1)*SIZE; i < SIZE*SIZE; i++) {
-      uf.union(VIRTUAL_BOTTOM, i);
+      ufForTestPercolate.union(VIRTUAL_BOTTOM, i);
     }
+
   }
 
-  /** open site (row i, column j) if it is not already */
+  // open site (row i, column j) if it is not already
   // i,j between 1 and N
   public void open(int i, int j) {
     if (!validIndex(i, j)) {
@@ -65,7 +88,8 @@ public class Percolation {
       if (isOpen(x2, y2)) {
         int p = xyTo1D(x1, y1);
         int q = xyTo1D(x2, y2);
-        uf.union(p, q);
+        ufForTestPercolate.union(p, q);
+        ufForTestFull.union(p, q);
       }
     }
   }
@@ -79,12 +103,12 @@ public class Percolation {
   /** is site (row i, column j) full? */
   public boolean isFull(int i, int j) {
     int p = xyTo1D(i, j);
-    return isOpen(i, j) && uf.connected(p, VIRTUAL_TOP);
+    return isOpen(i, j) && ufForTestFull.connected(p, VIRTUAL_TOP);
   }
 
   /** does the system percolate? */
   public boolean percolates() {
-    return uf.connected(VIRTUAL_BOTTOM, VIRTUAL_TOP);
+    return ufForTestPercolate.connected(VIRTUAL_BOTTOM, VIRTUAL_TOP);
   }
 
   // convert 2 dimensional(row, column) pair to 1 dimensional index
