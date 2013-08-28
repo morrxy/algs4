@@ -96,12 +96,18 @@ public class Percolation {
 
   /** is site (row i, column j) open? */
   public boolean isOpen(int i, int j) {
+    if (!validIndex(i, j)) {
+      throw new IndexOutOfBoundsException("row or/and column index out of bounds");
+    }
     int n = xyTo1D(i, j);
     return siteStatus[n];
   }
 
   /** is site (row i, column j) full? */
   public boolean isFull(int i, int j) {
+    if (!validIndex(i, j)) {
+      throw new IndexOutOfBoundsException("row or/and column index out of bounds");
+    }
     int p = xyTo1D(i, j);
     return isOpen(i, j) && ufForTestFull.connected(p, VIRTUAL_TOP);
   }
@@ -124,14 +130,16 @@ public class Percolation {
   }
 
   public static void main(String[] args) {
-    Percolation p = new Percolation(10);
-    p.open(1, 1);
-    p.open(1, 2);
+    Percolation p = new Percolation(1);
+    // p.open(1, 1);
+    // p.open(12, 6);
+    // p.open(11, 6);
+    // p.open(6, 0);
 
     StdOut.println(p.percolates());
-    StdOut.println(p.isFull(1, 1));
-    StdOut.println(p.isFull(1, 2));
-    StdOut.println(p.isFull(1, 3));
+    // StdOut.println(p.isFull(1, 1));
+    // StdOut.println(p.isFull(1, 2));
+    // StdOut.println(p.isFull(1, 3));
   }
 
 }
