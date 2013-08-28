@@ -112,11 +112,17 @@ public class PercolationStats {
     int N = Integer.parseInt(args[0]);
     int T = Integer.parseInt(args[1]);
 
+    Stopwatch timer = new Stopwatch();
     PercolationStats ps = new PercolationStats(N, T);
+    double time = timer.elapsedTime();
+
     StdOut.printf("%-23s = %.16f\n", "mean", ps.mean());
     StdOut.printf("%-23s = %.18f\n", "stddev", ps.stddev());
     StdOut.printf("%-23s = %.16f, %.16f\n", "95% confidence interval",
       ps.confidenceLo(), ps.confidenceHi());
+
+    StdOut.println("time: " + time);
+
   }
 
 }
