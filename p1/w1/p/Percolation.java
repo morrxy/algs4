@@ -5,6 +5,7 @@ public class Percolation {
   private int SIZE;
   private int VIRTUAL_TOP;
   private int VIRTUAL_BOTTOM;
+  private WeightedQuickUnionUF ufForIsFull;
 
   /** create N-by-N grid, with all sites blocked */
   public Percolation(int N) {
