@@ -114,6 +114,7 @@ public class Percolation {
 
   /** does the system percolate? */
   public boolean percolates() {
+    if (SIZE == 1) return isOpen(1, 1); // used for 1x1 grid
     return ufForTestPercolate.connected(VIRTUAL_BOTTOM, VIRTUAL_TOP);
   }
 
