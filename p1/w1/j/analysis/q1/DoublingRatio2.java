@@ -17,6 +17,7 @@ public class DoublingRatio2 {
     for (int N = 250; true; N += N) {
       double time = timeTrial(N);
       StdOut.printf("%6d %7.1f %5.1f\n", N, time, time/prev);
+      prev = time;
     }
   }
 
