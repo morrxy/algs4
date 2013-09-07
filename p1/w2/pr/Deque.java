@@ -1,27 +1,173 @@
 /**
- * Throw a java.lang.NullPointerException if the client attempts to add a null item;
- * throw a java.util.NoSuchElementException if the client attempts to remove
- * an item from an empty deque;
- * throw a java.lang.UnsupportedOperationException if the client calls
- * the remove() method in the iterator;
- * throw a java.util.NoSuchElementException if the client calls the
- * next() method in the iterator and there are no more items to return.
- *
- * Your deque implementation should support each deque operation in constant
- * worst-case time and use space proportional to the number of items
- * currently in the deque. Additionally, your iterator implementation should
- * support the operations next() and hasNext() (plus construction) in
- * constant worst-case time and use a constant amount of extra
- * space per iterator.
- */
+* A double-ended queue or deque (pronounced "deck") is a generalization
+* of a stack and a queue that supports inserting and removing items
+* from either the front or the back of the data structure.
+*
+* Throw a java.lang.NullPointerException if the client attempts to add a null item;
+* throw a java.util.NoSuchElementException if the client attempts to remove
+* an item from an empty deque;
+* throw a java.lang.UnsupportedOperationException if the client calls
+* the remove() method in the iterator;
+* throw a java.util.NoSuchElementException if the client calls the
+* next() method in the iterator and there are no more items to return.
+*
+* Your deque implementation should support each deque operation in constant
+* worst-case time and use space proportional to the number of items
+* currently in the deque. Additionally, your iterator implementation should
+* support the operations next() and hasNext() (plus construction) in
+* constant worst-case time and use a constant amount of extra
+* space per iterator.
+*/
+
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class Deque<Item> implements Iterable<Item> {
-   public Deque()                     // construct an empty deque
-   public boolean isEmpty()           // is the deque empty?
-   public int size()                  // return the number of items on the deque
-   public void addFirst(Item item)    // insert the item at the front
-   public void addLast(Item item)     // insert the item at the end
-   public Item removeFirst()          // delete and return the item at the front
-   public Item removeLast()           // delete and return the item at the end
-   public Iterator<Item> iterator()   // return an iterator over items in order from front to end
+  private int N; // number of elements on deque
+  private Node first; // beginning of deque
+  private Node last; // end of deque
+
+  private class Node {
+    private Item item;
+    private Node next;
+    private Node prev;
+  }
+
+
+// construct an empty deque
+  public Deque() {
+    first = null;
+    last = null;
+    N = 0;
+  }
+
+// is the deque empty?
+  public boolean isEmpty() {
+    return first == null;
+  }
+
+// return the number of items on the deque
+  public int size() {
+    return N;
+  }
+
+// insert the item at the front
+  public void addFirst(Item item) {
+    Node oldfirst = first;
+    first = new Node();
+    first.item = item;
+    first.next = oldfirst;
+    first.prev = null;
+    if (isEmpty()) last = first;
+    else oldfirst.prev = first;
+    N += 1;
+  }
+
+// insert the item at the end
+  public void addLast(Item item) {
+    // enqueue
+    Node oldlast = last;
+    last = new Node();
+    last.item = item;
+    last.next = null;
+    last.prev = oldlast;
+    if (isEmpty()) first = last;
+    else oldlast.next = last;
+    N += 1;
+    assert check();
+  }
+
+// delete and return the item at the front
+  public Item removeFirst() {
+    // dequeue
+    if (isEmpty()) throw new NoSuchElementException("remove from empty deque");
+    Item item = first.item;
+    first = first.next;
+    first.prev = null;
+    N--;
+    if (isEmpty()) last = null;
+    assert check();
+    return item;
+  }
+
+// delete and return the item at the end
+  public Item removeLast() {
+    if (isEmpty()) throw new NoSuchElementException("remove from empty deque");
+    Item item = last.item;
+    Node oldprev = last.prev;
+    last = oldprev;
+    last.next = null;
+    N--;
+    if (isEmpty()) first = null;
+    assert check();
+    return item;
+  }
+
+// return an iterator over items in order from front to end
+// !!!
+  public Iterator<Item> iterator() {
+    return new ListIterator();
+  }
+
+// an iterator, doesn't implement remove() since it's optional
+  private class ListIterator implements Iterator<Item> {
+    private Node current = first;
+
+    public boolean hasNext()  { return current != null;                     }
+    public void remove()      { throw new UnsupportedOperationException();  }
+
+    public Item next() {
+      if (!hasNext()) throw new NoSuchElementException();
+      Item item = current.item;
+      current = current.next;
+      return item;
+    }
+  }
+
+// check internal invariants
+  private boolean check() {
+    if (N == 0) {
+      if (first != null) return false;
+      if (last  != null) return false;
+    }
+    else if (N == 1) {
+      if (first == null || last == null) return false;
+      if (first != last)                 return false;
+      if (first.next != null)            return false;
+    }
+    else {
+      if (first == last)      return false;
+      if (first.next == null) return false;
+      if (last.next  != null) return false;
+
+// check internal consistency of instance variable N
+      int numberOfNodes = 0;
+      for (Node x = first; x != null; x = x.next) {
+        numberOfNodes++;
+      }
+      if (numberOfNodes != N) return false;
+
+// check internal consistency of instance variable last
+      Node lastNode = first;
+      while (lastNode.next != null) {
+        lastNode = lastNode.next;
+      }
+      if (last != lastNode) return false;
+    }
+
+    return true;
+  }
+
+  public static void main(String[] args) {
+    Deque<String> q = new Deque<String>();
+    while (!StdIn.isEmpty()) {
+      String item = StdIn.readString();
+      if (!item.equals("-")) q.addLast(item);
+      else if (!q.isEmpty()) StdOut.print(q.removeFirst() + " ");
+    }
+    StdOut.println("(" + q.size() + " left on queue)");
+  }
+
+
+
 }
