@@ -26,30 +26,122 @@
 *
 */
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 public class RandomizedQueue<Item> implements Iterable<Item> {
+
+  private int N; // number of elements on deque
+  private Node first; // beginning of deque
+  private Node last; // end of deque
+
+  private class Node {
+    private Item item;
+    private Node next;
+    private Node prev;
+  }
 
 // construct an empty randomized queue
   public RandomizedQueue() {
+    first = null;
+    last = null;
+    N = 0;
   }
 
 // is the queue empty?
   public boolean isEmpty() {
+    return first == null;
   }
 
 // return the number of items on the queue
   public int size() {
+    return N;
   }
 
 // add the item
   public void enqueue(Item item) {
+    Node oldlast = last;
+    last = new Node();
+    last.item = item;
+    last.next = null;
+    last.prev = oldlast;
+    if (isEmpty()) first = last;
+    else oldlast.next = last;
+    N += 1;
   }
 
 // delete and return a random item
   public Item dequeue() {
+    if (isEmpty()) throw new NoSuchElementException();
+    int x = StdRandom.uniform(N);
+    Node nx = findNthNode(x);
+    Item item = nx.item;
+
+    if (N == 1) {
+      first = null;
+      last = null;
+      N--;
+      return item;
+    }
+
+    if (N == 2) {
+      if (nx == first) {
+        first = last;
+        last.prev = null; 
+        N--;
+        return item;
+      }
+      if (nx == last) {
+        last = first;
+        first.next = null;
+        N--;
+        return item;
+      }
+    }
+
+    if (N >= 3) {
+      if (nx == first) {
+
+      } else if (nx == last) {
+
+      } else {
+
+      }
+    }
+
+    nx.prev.next = nx.next;
+    nx.next.prev = nx.prev;
+
+    N--;
+    return item;
   }
 
 // return (but do not delete) a random item
   public Item sample() {
+    if (isEmpty()) throw new NoSuchElementException();
+    int x = StdRandom.uniform(N);
+    Node nx = findNthNode(x);
+    return nx.item;
+  }
+
+  private Node findNthNode(int n) {
+    if (n < N / 2) {
+      int i = 0;
+      Node nx = first;
+      while (true) {
+        if (i == n) return nx; 
+        nx = nx.next;
+        i++;
+      }
+    } else {
+      int i = N - 1;
+      Node nx = last;
+      while(true) {
+        if (i == n) return nx;
+        nx = nx.prev;
+        i--;
+      }
+    }
   }
 
 // return an independent iterator over items in random order
