@@ -20,7 +20,6 @@
 public class Subset {
    public static void main(String[] args) {
     int k = Integer.parseInt(args[0]);
-    // StdOut.println(k);
     RandomizedQueue<String> r = new RandomizedQueue<String>();
 
     while (!StdIn.isEmpty()) {
