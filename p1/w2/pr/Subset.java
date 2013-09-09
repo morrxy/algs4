@@ -3,7 +3,7 @@
  * reads in a sequence of N strings from standard input using
  * StdIn.readString(), and prints out exactly k of them, uniformly at random.
  * Each item from the sequence can be printed out at most once.
- * You may assume that k ≥ 0 and no greater than the number of string
+ * You may assume that k >= 0 and no greater than the number of string
  * on standard input.
  *
  * Your client should use only constant space plus one object either of
@@ -13,8 +13,23 @@
  * of strings on standard input. (For an extra challenge, use space
  * proportional to k.)
  *
+ * % echo A B C D E F G H I | java Subset 3
+ *
  */
 
 public class Subset {
-   public static void main(String[] args) {}
+   public static void main(String[] args) {
+    int k = Integer.parseInt(args[0]);
+    // StdOut.println(k);
+    RandomizedQueue<String> r = new RandomizedQueue<String>();
+
+    while (!StdIn.isEmpty()) {
+      String str = StdIn.readString();
+      r.enqueue(str);
+    }
+
+    for (int i = 0; i < k; i++) {
+      StdOut.println(r.dequeue());
+    }
+   }
 }

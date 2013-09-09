@@ -60,6 +60,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
 // add the item
   public void enqueue(Item item) {
+    if (item == null) throw new NullPointerException();
     Node oldlast = last;
     last = new Node();
     last.item = item;
@@ -156,6 +157,11 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
       current = current.next;
       return item;
     }
+  }
+
+  public static void main(String[] args) {
+    RandomizedQueue<String> r = new RandomizedQueue<String>();
+    // r.enqueue(null);
   }
 
 }
