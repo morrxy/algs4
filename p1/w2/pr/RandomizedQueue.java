@@ -80,37 +80,31 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     if (N == 1) {
       first = null;
       last = null;
-      N--;
-      return item;
     }
 
     if (N == 2) {
       if (nx == first) {
         first = last;
-        last.prev = null; 
-        N--;
-        return item;
+        last.prev = null;
       }
       if (nx == last) {
         last = first;
         first.next = null;
-        N--;
-        return item;
       }
     }
 
     if (N >= 3) {
       if (nx == first) {
-
+        first = first.next;
+        first.prev = null;
       } else if (nx == last) {
-
+        last = last.prev;
+        last.next = null;
       } else {
-
+        nx.prev.next = nx.next;
+        nx.next.prev = nx.prev;
       }
     }
-
-    nx.prev.next = nx.next;
-    nx.next.prev = nx.prev;
 
     N--;
     return item;
@@ -129,14 +123,14 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
       int i = 0;
       Node nx = first;
       while (true) {
-        if (i == n) return nx; 
+        if (i == n) return nx;
         nx = nx.next;
         i++;
       }
     } else {
       int i = N - 1;
       Node nx = last;
-      while(true) {
+      while (true) {
         if (i == n) return nx;
         nx = nx.prev;
         i--;
@@ -146,6 +140,22 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
 // return an independent iterator over items in random order
   public Iterator<Item> iterator() {
+    return new ListIterator();
+  }
+
+// an iterator, doesn't implement remove() since it's optional
+  private class ListIterator implements Iterator<Item> {
+    private Node current = first;
+
+    public boolean hasNext()  { return current != null;                     }
+    public void remove()      { throw new UnsupportedOperationException();  }
+
+    public Item next() {
+      if (!hasNext()) throw new NoSuchElementException();
+      Item item = current.item;
+      current = current.next;
+      return item;
+    }
   }
 
 }

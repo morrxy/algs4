@@ -80,7 +80,7 @@ public class Deque<Item> implements Iterable<Item> {
 // delete and return the item at the front
   public Item removeFirst() {
     // dequeue
-    if (isEmpty()) throw new NoSuchElementException("remove from empty deque");
+    if (isEmpty()) throw new NoSuchElementException();
     Item item = first.item;
     first = first.next;
     first.prev = null;
@@ -92,7 +92,7 @@ public class Deque<Item> implements Iterable<Item> {
 
 // delete and return the item at the end
   public Item removeLast() {
-    if (isEmpty()) throw new NoSuchElementException("remove from empty deque");
+    if (isEmpty()) throw new NoSuchElementException();
     Item item = last.item;
     Node oldprev = last.prev;
     last = oldprev;
@@ -167,7 +167,5 @@ public class Deque<Item> implements Iterable<Item> {
     }
     StdOut.println("(" + q.size() + " left on queue)");
   }
-
-
 
 }
