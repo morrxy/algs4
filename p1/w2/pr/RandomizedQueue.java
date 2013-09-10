@@ -4,13 +4,13 @@
 *
 * Throw a java.lang.NullPointerException if the client attempts to
 * add a null item;
-* 
+*
 * throw a java.util.NoSuchElementException if the client attempts to
 * sample or dequeue an item from an empty randomized queue;
-* 
+*
 * throw a java.lang.UnsupportedOperationException if the client
 * calls the remove() method in the iterator;
-* 
+*
 * throw a java.util.NoSuchElementException if the client calls the
 * next() method in the iterator and there are no more items to return.
 *
@@ -18,20 +18,20 @@
 * queue operation (besides creating an iterator) in constant amortized
 * time and use space proportional to the number of items currently in
 * the queue.
-*  
+*
 * That is, any sequence of M randomized queue operations
 * (starting from an empty queue) should take at most cM steps in the
-* worst case, for some constant c. 
-* 
-* Additionally, your iterator implementation should support construction 
-* in time linear in the number of items and it should support the operations 
-* next() and hasNext() in constant worst-case time; 
-* 
+* worst case, for some constant c.
+*
+* Additionally, your iterator implementation should support construction
+* in time linear in the number of items and it should support the operations
+* next() and hasNext() in constant worst-case time;
+*
 * you may use a linear amount of extra memory per iterator.
-* 
-* The order of two or more iterators to the same randomized queue should 
-* be mutually independent; 
-* 
+*
+* The order of two or more iterators to the same randomized queue should
+* be mutually independent;
+*
 * each iterator must maintain its own random order.
 *
 */
@@ -56,11 +56,12 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     first = null;
     last = null;
     N = 0;
+    assert check();
   }
 
 // is the queue empty?
   public boolean isEmpty() {
-    return first == null;
+    return N == 0;
   }
 
 // return the number of items on the queue
@@ -79,6 +80,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     if (isEmpty()) first = last;
     else oldlast.next = last;
     N += 1;
+    assert check();
   }
 
 // delete and return a random item
@@ -118,6 +120,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     N--;
+    assert check();
     return item;
   }
 
@@ -126,6 +129,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     if (isEmpty()) throw new NoSuchElementException();
     int x = StdRandom.uniform(N);
     Node nx = findNthNode(x);
+    assert check();
     return nx.item;
   }
 
@@ -151,31 +155,111 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
 // return an independent iterator over items in random order
   public Iterator<Item> iterator() {
-    return new ListIterator();
+    // return new ListIterator();
+    return new RandomizedQueueIterator();
   }
 
-// an iterator, doesn't implement remove() since it's optional
-  private class ListIterator implements Iterator<Item> {
-    private Node current = first;
 
-    public boolean hasNext()  { return current != null;                     }
+// an iterator, doesn't implement remove() since it's optional
+  private class RandomizedQueueIterator implements Iterator<Item> {
+
+    private Item[] rq = (Item[]) new Object[N];
+
+    public RandomizedQueueIterator() {
+      int i = 0;
+      for (Node x = first; x != null; x = x.next) {
+        rq[i] = x.item;
+        i++;
+      }
+    }
+
     public void remove()      { throw new UnsupportedOperationException();  }
+    public boolean hasNext()  { return rq.length == 0;                     }
 
     public Item next() {
-      if (!hasNext()) throw new NoSuchElementException();
-      Item item = current.item;
-      current = current.next;
+      if (rq.length == 0) throw new NoSuchElementException();
+      int x = StdRandom.uniform(rq.length); // between 0 and N-1
+      Item item = rq[x];
+      rq = removeItem(x);
       return item;
     }
+
+    private Item[] removeItem(int x) {
+      int len = rq.length - 1;
+      Item[] newRq = (Item[]) new Object[len];
+
+      int j = 0;
+      for (int i = 0; i < rq.length; i++) {
+        if (i != x) {
+          newRq[j] = rq[i];
+          j++;
+        }
+      }
+
+      return newRq;
+    }
+  }
+
+  private boolean check() {
+    if (N == 0) {
+      if (first != null) return false;
+      if (last  != null) return false;
+    }
+    else if (N == 1) {
+      if (first == null || last == null) return false;
+      if (first != last)                 return false;
+      if (first.next != null)            return false;
+      if (first.prev != null)            return false;
+    }
+    else {
+      if (first == last)      return false;
+      if (first.next == null) return false;
+      if (first.prev != null) return false;
+      if (last.next  != null) return false;
+      if (last.prev  == null) return false;
+
+// check internal consistency of instance variable N
+      int numberOfNodes = 0;
+      for (Node x = first; x != null; x = x.next) {
+        numberOfNodes++;
+      }
+      if (numberOfNodes != N) return false;
+
+      numberOfNodes = 0;
+      for (Node x = last; x != null; x = x.prev) {
+        numberOfNodes++;
+      }
+      if (numberOfNodes != N) return false;
+
+// check internal consistency of instance variable last
+      Node lastNode = first;
+      while (lastNode.next != null) {
+        lastNode = lastNode.next;
+      }
+      if (last != lastNode) return false;
+
+      Node firstNode = last;
+      while (firstNode.prev != null) {
+        firstNode = firstNode.prev;
+      }
+      if (first != firstNode) return false;
+    }
+
+    return true;
   }
 
   public static void main(String[] args) {
     RandomizedQueue<String> r = new RandomizedQueue<String>();
-    // r.sample();
+    r.enqueue("a");
+    r.enqueue("b");
+    // r.enqueue("c");
+    Iterator<String> it = r.iterator();
+    StdOut.println(it.next());
+    StdOut.println(it.next());
+    // StdOut.println(it.next());
+    // StdOut.println(r.sample());
     // r.dequeue();
-    // Iterator<String> it = r.iterator();
     // it.remove();
-    // r.enqueue(null);
   }
 
 }

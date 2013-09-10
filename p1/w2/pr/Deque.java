@@ -3,7 +3,7 @@
 * of a stack and a queue that supports inserting and removing items
 * from either the front or the back of the data structure.
 *
-* Throw a java.lang.NullPointerException if the client attempts to 
+* Throw a java.lang.NullPointerException if the client attempts to
 * add a null item;
 *
 * throw a java.util.NoSuchElementException if the client attempts to remove
@@ -17,7 +17,7 @@
 *
 * Your deque implementation should support each deque operation in constant
 * worst-case time and use space proportional to the number of items
-* currently in the deque. 
+* currently in the deque.
 *
 * Additionally, your iterator implementation should
 * support the operations next() and hasNext() (plus construction) in
@@ -46,11 +46,13 @@ public class Deque<Item> implements Iterable<Item> {
     first = null;
     last = null;
     N = 0;
+    assert check();
   }
 
 // is the deque empty?
   public boolean isEmpty() {
-    return first == null;
+    // return first == null;
+    return N == 0;
   }
 
 // return the number of items on the deque
@@ -217,16 +219,22 @@ public class Deque<Item> implements Iterable<Item> {
 
   public static void main(String[] args) {
     Deque<String> q = new Deque<String>();
+    q.addFirst("a");
+    q.addFirst("a");
+    q.addFirst("a");
+    // q.removeLast();
+    // q.addFirst("a");
     // Iterator<String> it = q.iterator();
+    // Iterator<String> it2 = q.iterator();
     // it.next();
     // q.removeLast();
     // q.addFirst(null);
-    while (!StdIn.isEmpty()) {
-      String item = StdIn.readString();
-      if (!item.equals("-")) q.addLast(item);
-      else if (!q.isEmpty()) StdOut.print(q.removeFirst() + " ");
-    }
-    StdOut.println("(" + q.size() + " left on queue)");
+    // while (!StdIn.isEmpty()) {
+    //   String item = StdIn.readString();
+    //   if (!item.equals("-")) q.addLast(item);
+    //   else if (!q.isEmpty()) StdOut.print(q.removeFirst() + " ");
+    // }
+    // StdOut.println("(" + q.size() + " left on queue)");
   }
 
 }
