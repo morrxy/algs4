@@ -115,16 +115,20 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
   // an iterator, doesn't implement remove() since it's optional
   private class RandomArrayIterator implements Iterator<Item> {
-    private int i;
-    // private int[] idxArr;
+    private int[] idxArr;
+    // every next(),random select from 0 to lastIdx
+    private int lastIdx;
 
     public RandomArrayIterator() {
-      i = N;
-      // idxArr = new int[N]
+      lastIdx = N - 1; 
+      idxArr = new int[N];
+      for (int k = 0; k < N; k++) {
+        idxArr[k] = k;
+      }
     }
 
     public boolean hasNext() {
-      return i > 0;
+      return lastIdx >= 0;
     }
 
     public void remove() {
@@ -134,9 +138,19 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     public Item next() {
       if (!hasNext()) throw new NoSuchElementException();
 
-      i--;
-      int x = StdRandom.uniform(N);
-      return a[x];
+      // i--;
+      // int x = StdRandom.uniform(N);
+      // return a[x];
+
+      int i = StdRandom.uniform(lastIdx+1);
+      Item item = a[idxArr[i]];
+      // exchange idxArr[i] and idxArr[lastIdx]
+      int tmp = idxArr[i];
+      idxArr[i] = idxArr[lastIdx];
+      idxArr[lastIdx] = tmp;
+
+      lastIdx--;
+      return item;
     }
 
   }
@@ -157,8 +171,19 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     r.enqueue("b");
     // r.enqueue("c");
     Iterator<String> it = r.iterator();
+    // Iterator<String> it2 = r.iterator();
     StdOut.println(it.next());
     StdOut.println(it.next());
+
+    for (String s : r) {
+      for (String s2 : r) {
+        StdOut.println("inner1:" + s2);
+      }
+      StdOut.println("outer: " + s);
+      for (String s3: r) {
+        StdOut.println("inner2:" + s3);
+      }
+    }
     // StdOut.println(it.next());
     // StdOut.println(r.sample());
     // r.dequeue();
