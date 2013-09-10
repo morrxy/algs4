@@ -41,210 +41,113 @@ import java.util.NoSuchElementException;
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
 
-  private int N; // number of elements on deque
-  private Node first; // beginning of deque
-  private Node last; // end of deque
-
-  private class Node {
-    private Item item;
-    private Node next;
-    private Node prev;
-  }
+  private Item[] a;   // array of items
+  private int N;      // number of elements on queue
 
 // construct an empty randomized queue
   public RandomizedQueue() {
-    first = null;
-    last = null;
-    N = 0;
-    assert check();
+    a = (Item[]) new Object[2];
   }
 
 // is the queue empty?
-  public boolean isEmpty() {
-    return N == 0;
-  }
+  public boolean isEmpty() { return N == 0; }
 
 // return the number of items on the queue
-  public int size() {
-    return N;
+  public int size() { return N; }
+
+// resize the underliying array holding the elements
+  private void resize(int capacity) {
+    assert capacity >= N;
+    Item[] temp = (Item[]) new Object[capacity];
+    for (int i = 0; i < N; i++) {
+      temp[i] = a[i];
+    }
+    a = temp;
   }
 
 // add the item
   public void enqueue(Item item) {
     if (item == null) throw new NullPointerException();
-    Node oldlast = last;
-    last = new Node();
-    last.item = item;
-    last.next = null;
-    last.prev = oldlast;
-    if (isEmpty()) first = last;
-    else oldlast.next = last;
-    N += 1;
+
+    if (N == a.length) resize(2 * a.length);
+    a[N] = item;
+    N++;
+
     assert check();
+
   }
 
 // delete and return a random item
   public Item dequeue() {
     if (isEmpty()) throw new NoSuchElementException();
+
     int x = StdRandom.uniform(N);
-    Node nx = findNthNode(x);
-    Item item = nx.item;
+    Item item = a[x];
 
-    if (N == 1) {
-      first = null;
-      last = null;
-    }
-
-    if (N == 2) {
-      if (nx == first) {
-        first = last;
-        last.prev = null;
-      }
-      if (nx == last) {
-        last = first;
-        first.next = null;
-      }
-    }
-
-    if (N >= 3) {
-      if (nx == first) {
-        first = first.next;
-        first.prev = null;
-      } else if (nx == last) {
-        last = last.prev;
-        last.next = null;
-      } else {
-        nx.prev.next = nx.next;
-        nx.next.prev = nx.prev;
-      }
-    }
-
+    exch(x, N-1);
+    a[N-1] = null;
     N--;
+
+    if (N > 0 && N == a.length/4) resize(a.length/2);
+
     assert check();
     return item;
+
+  }
+
+  private void exch(int i, int j) {
+    Item tmp = a[i];
+    a[i] = a[j];
+    a[j] = tmp;
   }
 
 // return (but do not delete) a random item
   public Item sample() {
     if (isEmpty()) throw new NoSuchElementException();
     int x = StdRandom.uniform(N);
-    Node nx = findNthNode(x);
-    assert check();
-    return nx.item;
-  }
-
-  private Node findNthNode(int n) {
-    if (n < N / 2) {
-      int i = 0;
-      Node nx = first;
-      while (true) {
-        if (i == n) return nx;
-        nx = nx.next;
-        i++;
-      }
-    } else {
-      int i = N - 1;
-      Node nx = last;
-      while (true) {
-        if (i == n) return nx;
-        nx = nx.prev;
-        i--;
-      }
-    }
+    return a[x];
   }
 
 // return an independent iterator over items in random order
   public Iterator<Item> iterator() {
-    // return new ListIterator();
-    return new RandomizedQueueIterator();
+    return new RandomArrayIterator();
   }
 
+  // an iterator, doesn't implement remove() since it's optional
+  private class RandomArrayIterator implements Iterator<Item> {
+    private int i;
+    // private int[] idxArr;
 
-// an iterator, doesn't implement remove() since it's optional
-  private class RandomizedQueueIterator implements Iterator<Item> {
-
-    private Item[] rq = (Item[]) new Object[N];
-
-    public RandomizedQueueIterator() {
-      int i = 0;
-      for (Node x = first; x != null; x = x.next) {
-        rq[i] = x.item;
-        i++;
-      }
+    public RandomArrayIterator() {
+      i = N;
+      // idxArr = new int[N]
     }
 
-    public void remove()      { throw new UnsupportedOperationException();  }
-    public boolean hasNext()  { return rq.length == 0;                     }
+    public boolean hasNext() {
+      return i > 0;
+    }
+
+    public void remove() {
+      throw new UnsupportedOperationException();
+    }
 
     public Item next() {
-      if (rq.length == 0) throw new NoSuchElementException();
-      int x = StdRandom.uniform(rq.length); // between 0 and N-1
-      Item item = rq[x];
-      rq = removeItem(x);
-      return item;
+      if (!hasNext()) throw new NoSuchElementException();
+
+      i--;
+      int x = StdRandom.uniform(N);
+      return a[x];
     }
 
-    private Item[] removeItem(int x) {
-      int len = rq.length - 1;
-      Item[] newRq = (Item[]) new Object[len];
-
-      int j = 0;
-      for (int i = 0; i < rq.length; i++) {
-        if (i != x) {
-          newRq[j] = rq[i];
-          j++;
-        }
-      }
-
-      return newRq;
-    }
   }
 
   private boolean check() {
-    if (N == 0) {
-      if (first != null) return false;
-      if (last  != null) return false;
+    // check internal consistency of instance varible a and N
+    int number = 0;
+    for (int i = 0; i < a.length; i++) {
+      if (a[i] != null) number++;
     }
-    else if (N == 1) {
-      if (first == null || last == null) return false;
-      if (first != last)                 return false;
-      if (first.next != null)            return false;
-      if (first.prev != null)            return false;
-    }
-    else {
-      if (first == last)      return false;
-      if (first.next == null) return false;
-      if (first.prev != null) return false;
-      if (last.next  != null) return false;
-      if (last.prev  == null) return false;
-
-// check internal consistency of instance variable N
-      int numberOfNodes = 0;
-      for (Node x = first; x != null; x = x.next) {
-        numberOfNodes++;
-      }
-      if (numberOfNodes != N) return false;
-
-      numberOfNodes = 0;
-      for (Node x = last; x != null; x = x.prev) {
-        numberOfNodes++;
-      }
-      if (numberOfNodes != N) return false;
-
-// check internal consistency of instance variable last
-      Node lastNode = first;
-      while (lastNode.next != null) {
-        lastNode = lastNode.next;
-      }
-      if (last != lastNode) return false;
-
-      Node firstNode = last;
-      while (firstNode.prev != null) {
-        firstNode = firstNode.prev;
-      }
-      if (first != firstNode) return false;
-    }
-
+    if (number != N) return false;
     return true;
   }
 
