@@ -8,6 +8,8 @@
  *  with coordinates between 0 and 32,767, and plots them using
  *  standard drawing.
  *
+ *  java PointPlotter input56.txt
+ *
  *************************************************************************/
 
 public class PointPlotter {
