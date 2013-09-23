@@ -11,6 +11,7 @@
  *************************************************************************/
 
 import java.util.Comparator;
+import java.util.Arrays;
 
 public class Point implements Comparable<Point> {
 
@@ -45,42 +46,42 @@ public class Point implements Comparable<Point> {
 
     // Treat the slope of a horizontal line segment as positive zero
     if (this.x != that.x && this.y == that.y) {
-      double a = 1.0;
-      return (a - a) / a;
+      // StdOut.println("horizontal");
+      return 0.0;
     }
 
     // treat the slope of a vertical line segment as positive infinity;
     if (this.x == that.x && this.y != that.y) {
+      // StdOut.println("vertical");
       return Double.POSITIVE_INFINITY;
     }
 
     // treat the slope of a degenerate line segment (between a point
     // and itself) as negative infinity
     if (this.x == that.x && this.y == that.y) {
+      // StdOut.println("degenerate");
       return Double.NEGATIVE_INFINITY;
     }
 
-    return (that.y - this.y) / (that.x - this.x);
+    // StdOut.println("normal");
+    return (double)(that.y - this.y) / (that.x - this.x);
   }
 
   private class BySlope implements Comparator<Point> {
     public int compare(Point v, Point w) {
-      if ((Point.this.x != v.x && Point.this.y == v.y) && (Point.this.x != w.x && Point.this.y == w.y)) {
-        return 0;
-      }
 
-      if ((Point.this.slopeTo(v) == Double.POSITIVE_INFINITY) && (Point.this.slopeTo(w) == Double.POSITIVE_INFINITY)) {
-        return 0;
-      }
+      double slp1 = Point.this.slopeTo(v);
+      double slp2 = Point.this.slopeTo(w);
 
-      if ((Point.this.slopeTo(v) == Double.NEGATIVE_INFINITY) && (Point.this.slopeTo(w) == Double.NEGATIVE_INFINITY)) {
-        return 0;
-      }
+      // StdOut.println("slp1:" + slp1);
+      // StdOut.println("slp2:" + slp2);
 
-      double result = Point.this.slopeTo(v) - Point.this.slopeTo(w);
+      if (slp1 == slp2) return 0;
+
+      double result = slp1 - slp2;
+
       if (result > 0) return 1;
-      else if (result < 0) return -1;
-      else return 0;
+      else return -1;
     }
   }
 
@@ -104,6 +105,61 @@ public class Point implements Comparable<Point> {
   // unit test
   public static void main(String[] args) {
     /* YOUR CODE HERE */
+    Point p0 = new Point(1, 1);
+    Point p1 = new Point(1, 1);
+    Point p2 = new Point(1, 3);
+    int r = p0.SLOPE_ORDER.compare(p1, p2);
+    StdOut.println(r);
+
+    // StdOut.println(Double.POSITIVE_INFINITY > 0.0);
+    // StdOut.println(0.0 > Double.NEGATIVE_INFINITY);
+    // StdOut.println(Double.POSITIVE_INFINITY > Double.NEGATIVE_INFINITY);
+
+    // StdOut.println(Double.POSITIVE_INFINITY - Double.POSITIVE_INFINITY);
+    // StdOut.println(Double.POSITIVE_INFINITY - Double.NEGATIVE_INFINITY);
+    // StdOut.println(Double.POSITIVE_INFINITY - 0.0);
+
+    // StdOut.println(Double.NEGATIVE_INFINITY - Double.NEGATIVE_INFINITY);
+    // StdOut.println(Double.NEGATIVE_INFINITY - Double.POSITIVE_INFINITY);
+    // StdOut.println(Double.NEGATIVE_INFINITY - 0.0);
+
+    // StdOut.println(0.0 - Double.POSITIVE_INFINITY);
+    // StdOut.println(0.0 - Double.NEGATIVE_INFINITY);
+
+    // StdOut.println(Double.POSITIVE_INFINITY == Double.POSITIVE_INFINITY);
+    // StdOut.println(Double.NEGATIVE_INFINITY == Double.NEGATIVE_INFINITY);
+
+    // String filename = args[0];
+    // In in = new In(filename);
+    // int N = in.readInt();
+
+    // int x = in.readInt();
+    // int y = in.readInt();
+    // Point po = new Point(x, y);
+
+    // Point[] points = new Point[N - 1];
+    // for (int i = 0; i < N-1; i++) {
+    //   x = in.readInt();
+    //   y = in.readInt();
+    //   Point p = new Point(x, y);
+    //   points[i] = p;
+    // }
+
+    // StdOut.println("po: " + po.toString());
+    // for (Point p : points) {
+    //   StdOut.println(p.toString());
+    // }
+
+    // Arrays.sort(points);
+    // Arrays.sort(points, Point.SLOPE_ORDER);
+
+    // StdOut.println("after:");
+    // for (Point p : points) {
+    //   StdOut.println(p.toString());
+    // }
+
+    // int x1 = po.SLOPE_ORDER.compare(points[0], points[1]);
+    // StdOut.println(x1);
   }
 
 }
