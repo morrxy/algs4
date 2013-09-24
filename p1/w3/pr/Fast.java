@@ -93,7 +93,6 @@ public class Fast {
 
       if (slp == prev) {
         c++;
-        // StdOut.println("count, in if: " + c);
       } else {
         if (c >= 3) {
           outPutAdjacent(ps, i - 1, c, p0);
@@ -108,6 +107,53 @@ public class Fast {
     // after loop if c >= 3, porcess once again
     if (c >= 3) {
       outPutAdjacent(ps, ps.length-1, c, p0);
+    }
+
+  }
+
+  private static void checkAdjacentPoints2(Point[] ps, Point p0) {
+    if (ps.length < 3) return;
+
+    // first slope
+    double prev = p0.slopeTo(ps[0]);
+
+    // count of adjacent points with same slope to p0 for current point in ps
+    int c = 1;
+
+    int[] longest = new int[2];
+
+    for (int i = 1; i < ps.length; i++) {
+      double slp = p0.slopeTo(ps[i]);
+
+      if (slp == prev) {
+        c++;
+      } else {
+        if (c >= 3) {
+          // outPutAdjacent(ps, i - 1, c, p0);
+          if (c > longest[1]) {
+            longest[0] = i - 1;
+            longest[1] = c;
+          }
+        }
+        // reset count
+        c = 1;
+      }
+
+      prev = slp;
+    }
+
+    // after loop if c >= 3, porcess once again
+    if (c >= 3) {
+      // outPutAdjacent(ps, ps.length-1, c, p0);
+      if (c > longest[1]) {
+        longest[0] = ps.length-1;
+        longest[1] = c;
+      }
+    }
+
+    // output longest line segment
+    if (longest[1] >= 3) {
+      outPutAdjacent(ps, longest[0], longest[1], p0);
     }
 
   }
@@ -140,7 +186,8 @@ public class Fast {
       Point[] ps = rightPoints(i, points);
 
       Arrays.sort(ps, p0.SLOPE_ORDER);
-      checkAdjacentPoints(ps, p0);
+      // checkAdjacentPoints(ps, p0);
+      checkAdjacentPoints2(ps, p0);
     }
     // test end
 
