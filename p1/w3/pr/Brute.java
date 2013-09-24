@@ -19,11 +19,6 @@ public class Brute {
       p.draw();
     }
 
-    // StdOut.println("before sort:");
-    // for (Point p : points) {
-    //   StdOut.println(p.toString());
-    // }
-
     Arrays.sort(points);
 
     for (int i = 0; i < N; i++) {
@@ -34,7 +29,9 @@ public class Brute {
             double slp2 = points[i].slopeTo(points[k]);
             double slp3 = points[i].slopeTo(points[m]);
             if (slp1 == slp2 && slp2 == slp3) {
-              StdOut.println(points[i].toString() + " -> " + points[j].toString() + " -> " + points[k].toString() + " -> " + points[m].toString());
+              StdOut.println(points[i].toString() + " -> "
+                + points[j].toString() + " -> " + points[k].toString()
+                + " -> " + points[m].toString());
               points[i].drawTo(points[m]);
             }
           }

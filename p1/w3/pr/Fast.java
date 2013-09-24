@@ -1,12 +1,12 @@
 import java.util.Arrays;
 
 public class Fast {
-  public static void sortPoints(Point p, Point[] ps) {
+  private static void sortPoints(Point p, Point[] ps) {
     Arrays.sort(ps, p.SLOPE_ORDER);
   }
 
   // is ps sorted of slope to p?
-  public static boolean isSorted(Point p, Point[] ps) {
+  private static boolean isSorted(Point p, Point[] ps) {
     for (int i = 1; i < ps.length; i++) {
       if (p.slopeTo(ps[i]) < p.slopeTo(ps[i-1])) {
         return false;
@@ -15,7 +15,7 @@ public class Fast {
     return true;
   }
 
-  public static Point[] rightPoints(int i, Point[] ps) {
+  private static Point[] rightPoints(int i, Point[] ps) {
     Point[] arr = new Point[ps.length - i - 1];
     for (int k = 0; k < arr.length; k++) {
       arr[k] = ps[k + i + 1];
@@ -23,63 +23,91 @@ public class Fast {
     return arr;
   }
 
-  public static void showPoints(Point[] ps) {
-    StdOut.println();
-    for (Point p : ps) {
-      StdOut.print(p.toString() + ", ");
+  private static Point[] otherPoints(int exclude, Point[] ps) {
+    Point[] arr = new Point[ps.length - 1];
+    int j = 0;
+    for (int i = 0; i < ps.length; i++) {
+      if (i == exclude) continue;
+      arr[j] = ps[i];
+      j++;
     }
-    StdOut.println();
+    return arr;
   }
 
-  public static void showResultPoints(Point[] ps) {
-    StdOut.println();
+  private static void showPoints(Point[] ps) {
+    for (int i = 0; i < ps.length; i++) {
+      if (i != ps.length-1) StdOut.print(ps[i].toString() + ", ");
+      else StdOut.print(ps[i].toString() + "\n");
+    }
+  }
+
+  private static void showResultPoints(Point[] ps) {
     for (int i = 0; i < ps.length; i++) {
       StdOut.print(ps[i].toString());
       if (i != ps.length - 1) StdOut.print(" -> ");
+      else StdOut.print("\n");
     }
-    StdOut.println();
   }
 
-  public static void outPut(Point[] ps, int from, int to, Point p0) {
+  private static void showSlopes(Point[] ps, Point p0) {
+    for (int i = 0; i < ps.length; i++) {
+      if (i != ps.length-1) StdOut.print(p0.slopeTo(ps[i]) + ", ");
+      else StdOut.print(p0.slopeTo(ps[i]) + "\n");
+    }
+  }
 
-    StdOut.println("output");
-    StdOut.println(p0.toString());
-    showPoints(ps);
-    StdOut.println("from:" + from);
-    StdOut.println("to:" + to);
+  private static void outPutAdjacent(Point[] ps, int toIdx, int count, Point p0) {
+    Point[] arr = new Point[count + 1];
 
+    // which index start from ps
+    int from = toIdx - count + 1;
 
-    Point[] arr = new Point[to - from + 1 + 1];
-    for (int i = 0; i < arr.length - 1 ; i++) {
+    // input points in ps to arr
+    for (int i = 0; i < arr.length - 1; i++) {
       arr[i] = ps[from];
       from += 1;
     }
+
+    // input p0 as last item of arr
     arr[arr.length - 1] = p0;
 
+    // output
     Arrays.sort(arr);
-    arr[0].drawTo(arr[arr.length-1]);
     showResultPoints(arr);
+    arr[0].drawTo(arr[arr.length-1]);
   }
 
-  public static void checkAdjacentPoints(Point[] ps, Point p0) {
+  // in ps,find adjacent points having equal slopte with p0
+  // if these points have 3 or more, output these point plus p0
+  private static void checkAdjacentPoints(Point[] ps, Point p0) {
     if (ps.length < 3) return;
 
-    int c = 0;
+    // first slope
     double prev = p0.slopeTo(ps[0]);
+
+    // count of adjacent points with same slope to p0 for current point in ps
+    int c = 1;
 
     for (int i = 1; i < ps.length; i++) {
       double slp = p0.slopeTo(ps[i]);
 
       if (slp == prev) {
         c++;
+        // StdOut.println("count, in if: " + c);
       } else {
         if (c >= 3) {
-          outPut(ps, i - 1 - c, i - 1, p0);
+          outPutAdjacent(ps, i - 1, c, p0);
         }
-        c = 0;
+        // reset count
+        c = 1;
       }
 
       prev = slp;
+    }
+
+    // after loop if c >= 3, porcess once again
+    if (c >= 3) {
+      outPutAdjacent(ps, ps.length-1, c, p0);
     }
 
   }
@@ -105,60 +133,15 @@ public class Fast {
     }
 
     // test begin
-
     for (int i = 0; i < N; i++) {
       Point p0 = points[i];
+
+      // all points right the curent p0
       Point[] ps = rightPoints(i, points);
-      // showPoints(ps);
+
       Arrays.sort(ps, p0.SLOPE_ORDER);
-      // showPoints(ps);
       checkAdjacentPoints(ps, p0);
-
     }
-
-    // Point p0 = points[0];
-    // Point[] ps = new Point[N-1];
-    // for (int i = 0; i < N-1; i++) {
-    //   ps[i] = points[i+1];
-    // }
-
-    // look points
-    // StdOut.println("p0: " + p0.toString());
-    // for (Point p : ps) {
-    //   StdOut.println(p.toString());
-    // }
-
-    // sortPoints(p0, ps);
-    // assert isSorted(p0, ps);
-
-    // look points
-    // StdOut.println("p0: " + p0.toString());
-    // for (Point p : ps) {
-    //   StdOut.println(p.toString());
-    //   StdOut.println(p0.slopeTo(p));
-    // }
-
-    // int c = 0;
-    // double slp;
-    // double prev = p0.slopeTo(ps[0]);
-
-    // for (int i = 1; i < ps.length; i++) {
-    //   double slp = p0.slopeTo(ps[i]);
-
-    //   if (slp == prev) {
-    //     c++;
-    //     if (c >= 3) {
-    //       StdOut.println("c:" + c);
-    //       StdOut.println(ps[i].toString());
-    //       p0.drawTo(ps[i]);
-    //     }
-    //   } else {
-    //     c = 0;
-    //   }
-
-    //   prev = slp;
-    // }
-
     // test end
 
     // show result canvas

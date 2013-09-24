@@ -11,7 +11,7 @@
  *************************************************************************/
 
 import java.util.Comparator;
-import java.util.Arrays;
+// import java.util.Arrays;
 
 public class Point implements Comparable<Point> {
 
@@ -64,7 +64,7 @@ public class Point implements Comparable<Point> {
     }
 
     // StdOut.println("normal");
-    return (double)(that.y - this.y) / (that.x - this.x);
+    return (double) (that.y - this.y) / (that.x - this.x);
   }
 
   private class BySlope implements Comparator<Point> {
@@ -105,11 +105,24 @@ public class Point implements Comparable<Point> {
   // unit test
   public static void main(String[] args) {
     /* YOUR CODE HERE */
-    Point p0 = new Point(1, 1);
-    Point p1 = new Point(1, 1);
-    Point p2 = new Point(1, 3);
-    int r = p0.SLOPE_ORDER.compare(p1, p2);
-    StdOut.println(r);
+    Point p0 = new Point(10000, 0);
+    Point p1 = new Point(7000, 3000);
+    Point p2 = new Point(3000, 7000);
+
+    double slp1 = p0.slopeTo(p1);
+    double slp2 = p0.slopeTo(p2);
+
+    StdOut.println(slp1);
+    StdOut.println(slp2);
+    StdOut.println(slp1 == slp2);
+
+    double x1 = 6.0 / 7;
+    double x2 = 6.0 / 7;
+    StdOut.println(x1);
+    StdOut.println(x1 == x2);
+
+    // int r = p0.SLOPE_ORDER.compare(p1, p2);
+    // StdOut.println(r);
 
     // StdOut.println(Double.POSITIVE_INFINITY > 0.0);
     // StdOut.println(0.0 > Double.NEGATIVE_INFINITY);
