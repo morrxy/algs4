@@ -358,9 +358,9 @@ public class BST1<Key extends Comparable<Key>, Value> {
 
         StdOut.println();
 
-        st.delete("57");
-        st.delete("95");
-        st.delete("75");
+        st.delete("16");
+        st.delete("87");
+        st.delete("58");
 
         StdOut.println("after delete:");
 

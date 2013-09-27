@@ -357,7 +357,7 @@ public class BST1<Key extends Comparable<Key>, Value> {
 
         StdOut.println();
 
-        StdOut.println(st.get("39"));
+        StdOut.println(st.get("30"));
 
         // for (String s : st.keys())
         //     StdOut.println(s + " " + st.get(s));
