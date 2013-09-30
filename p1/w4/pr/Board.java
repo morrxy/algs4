@@ -118,7 +118,84 @@ public class Board {
   }
 
   // all neighboring boards
-  // public Iterable<Board> neighbors() {}
+  public Iterable<Board> neighbors() {
+    Queue<Board> bds = new Queue<Board>();
+
+    int[] blankPosition = findBlankPosition();
+    int blankRow = blankPosition[0];
+    int blankColumn = blankPosition[1];
+    int[][] tmp;
+
+    if (existLeftTile(blankRow, blankColumn)) {
+      tmp = swapTwoElement(blankRow, blankColumn, blankRow, blankColumn - 1);
+      bds.enqueue(new Board(tmp));
+    }
+
+    if (existRightTile(blankRow, blankColumn)) {
+      tmp = swapTwoElement(blankRow, blankColumn, blankRow, blankColumn + 1);
+      bds.enqueue(new Board(tmp));
+    }
+
+    if (existAboveTile(blankRow, blankColumn)) {
+      tmp = swapTwoElement(blankRow - 1, blankColumn, blankRow, blankColumn);
+      bds.enqueue(new Board(tmp));
+    }
+
+    if (existBelowTile(blankRow, blankColumn)) {
+      tmp = swapTwoElement(blankRow + 1, blankColumn, blankRow, blankColumn);
+      bds.enqueue(new Board(tmp));
+    }
+
+    return bds;
+  }
+
+  private int[][] swapTwoElement(int i, int j, int k, int m) {
+    int[][] arr = new int[N][N];
+    for (int x = 0; x < N; x++) {
+      for (int y = 0; y < N; y++) {
+        arr[x][y] = tiles[x][y];
+      }
+    }
+
+    int tmp = arr[i][j];
+    arr[i][j] = arr[k][m];
+    arr[k][m] = tmp;
+
+    return arr;
+  }
+
+  private boolean existLeftTile(int i, int j) {
+    return j - 1 >= 0;
+  }
+
+  private boolean existRightTile(int i, int j) {
+    return j + 1 < N;
+  }
+
+  private boolean existAboveTile(int i, int j) {
+    return i - 1 >= 0;
+  }
+
+  private boolean existBelowTile(int i, int j) {
+    return i + 1 < N;
+  }
+
+  private int[] findBlankPosition() {
+    int[] arr = new int[2];
+    boolean found = false;
+    for (int i = 0; i < N; i++) {
+      if (found) break;
+      for (int j = 0; j < N; j++) {
+        if (tiles[i][j] == 0) {
+          arr[0] = i;
+          arr[1] = j;
+          found = true;
+          break;
+        }
+      }
+    }
+    return arr;
+  }
 
   // string representation of the board (in the output format specified below)
   public String toString() {
@@ -148,10 +225,15 @@ public class Board {
     // StdOut.println("hamming: " + initial.hamming());
     // StdOut.println("manhattan: " + initial.manhattan());
     // StdOut.println("isGoal: " + initial.isGoal());
-    StdOut.println(initial.twin());
+    // StdOut.println(initial.twin());
+    for (Board bd : initial.neighbors()) {
+      StdOut.println(bd);
+    }
 
-    // int[][] ts = {{0, 1, 3}, {4, 2, 5}, {7, 8, 7}};
+    // int[][] ts = {{1, 3, 4}, {2, 0, 5}, {7, 8, 7}};
     // Board b1 = new Board(ts);
+    // StdOut.println(b1);
+    // b1.neighbors();
 
     // StdOut.println("equals: " + initial.equals(b1));
 
