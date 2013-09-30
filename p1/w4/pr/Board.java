@@ -137,12 +137,12 @@ public class Board {
     }
 
     if (existAboveTile(blankRow, blankColumn)) {
-      tmp = swapTwoElement(blankRow - 1, blankColumn, blankRow, blankColumn);
+      tmp = swapTwoElement(blankRow, blankColumn, blankRow - 1, blankColumn);
       bds.enqueue(new Board(tmp));
     }
 
     if (existBelowTile(blankRow, blankColumn)) {
-      tmp = swapTwoElement(blankRow + 1, blankColumn, blankRow, blankColumn);
+      tmp = swapTwoElement(blankRow, blankColumn, blankRow + 1, blankColumn);
       bds.enqueue(new Board(tmp));
     }
 
