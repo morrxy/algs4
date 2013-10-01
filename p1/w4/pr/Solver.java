@@ -1,6 +1,9 @@
 public class Solver {
 
   // private SearchNode current;
+  private MinPQ<SearchNode> pq;
+  private MinPQ<SearchNode> pqTwin;
+  private int TRY_TIMES = 10;
 
   private class SearchNode implements Comparable<SearchNode> {
     private Board board;
@@ -25,12 +28,42 @@ public class Solver {
   // find a solution to the initial board (using the A* algorithm)
   public Solver(Board initial) {
     SearchNode nd = new SearchNode(initial, 0, null);
-    MinPQ<SearchNode> pq = new MinPQ<SearchNode>();
+    pq = new MinPQ<SearchNode>();
     pq.insert(nd);
 
-    SearchNode nd2 = new SearchNode(initial.twin(), 0, null);
-    MinPQ<SearchNode> pq2 = new MinPQ<SearchNode>();
-    pq.insert(nd2);
+    SearchNode ndTwin = new SearchNode(initial.twin(), 0, null);
+    pqTwin = new MinPQ<SearchNode>();
+    pqTwin.insert(ndTwin);
+
+    boolean notSolve = true;
+
+    while (true) {
+      // try tryTimes for pq
+      // if solve, notSolve = true
+      if (try(pq)) break;
+
+
+      // try tryTimes for pqTwin
+      // if solve, notSolve = true
+
+      // break;
+    }
+
+    for (Board bd: nd.board.neighbors()) {
+      if (nd.previous != null) {
+        if (bd.equals(nd.previous.board)) continue;
+      }
+      SearchNode tmp = new SearchNode(bd, nd.moves + 1, nd);
+      pq.insert(tmp);
+    }
+
+
+    for (SearchNode sn : pq) {
+      StdOut.println("priority: " + (sn.moves + sn.board.manhattan()));
+      StdOut.println("moves:" + sn.moves);
+      StdOut.println("manhattan:" + sn.board.manhattan());
+      StdOut.println(sn.board);
+    }
 
     // current = new SearchNode();
     // current.board = initial;
@@ -80,7 +113,9 @@ public class Solver {
     for (int i = 0; i < N; i++)
       for (int j = 0; j < N; j++)
         blocks[i][j] = in.readInt();
+
     Board initial = new Board(blocks);
+    // Board initialTwin = initial.twin();
 
     // solve the puzzle
     Solver solver = new Solver(initial);
