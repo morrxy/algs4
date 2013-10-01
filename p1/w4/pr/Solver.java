@@ -4,6 +4,8 @@ public class Solver {
   private MinPQ<SearchNode> pq;
   private MinPQ<SearchNode> pqTwin;
   private int TRY_TIMES = 10;
+  private boolean solvable;
+  private SearchNode solvedNode;
 
   private class SearchNode implements Comparable<SearchNode> {
     private Board board;
@@ -35,72 +37,70 @@ public class Solver {
     pqTwin = new MinPQ<SearchNode>();
     pqTwin.insert(ndTwin);
 
-    boolean notSolve = true;
-
     while (true) {
-      // try tryTimes for pq
-      // if solve, notSolve = true
-      if (try(pq)) break;
-
-
-      // try tryTimes for pqTwin
-      // if solve, notSolve = true
-
-      // break;
-    }
-
-    for (Board bd: nd.board.neighbors()) {
-      if (nd.previous != null) {
-        if (bd.equals(nd.previous.board)) continue;
+      // try solve for pq
+      if (tryPQ(pq)) {
+        solvable = true;
+        break;
       }
-      SearchNode tmp = new SearchNode(bd, nd.moves + 1, nd);
-      pq.insert(tmp);
+
+      // try solve for pqTwin
+      if (tryPQ(pqTwin)) {
+        solvable = false;
+        break;
+      }
     }
 
+  }
 
-    for (SearchNode sn : pq) {
-      StdOut.println("priority: " + (sn.moves + sn.board.manhattan()));
-      StdOut.println("moves:" + sn.moves);
-      StdOut.println("manhattan:" + sn.board.manhattan());
-      StdOut.println(sn.board);
+  private boolean tryPQ(MinPQ<SearchNode> testPQ) {
+
+    for (int i = 0; i < TRY_TIMES; i++) {
+      SearchNode nd = testPQ.delMin();
+
+      // insert all neribours of nd to testPQ if not equals to previous board
+      for (Board bd: nd.board.neighbors()) {
+        if (nd.previous != null) {
+          if (bd.equals(nd.previous.board)) continue;
+        }
+        SearchNode tmp = new SearchNode(bd, nd.moves + 1, nd);
+        testPQ.insert(tmp);
+      }
+
+      if (nd.board.isGoal()) {
+        // StdOut.println(nd.board);
+        solvedNode = nd;
+        return true;
+      }
     }
 
-    // current = new SearchNode();
-    // current.board = initial;
-    // current.moves = 0;
-    // current.previous = null;
-
-
-  //   while (true) {
-  //     min = pq.delMin();
-  //     for (Board bd : min.neighbors()) {
-  //       if (!bd.equals(min.previous.board)) {
-  //         SearchNode nd = new SearchNode();
-  //         nd.board = bd;
-  //         nd.moves = min.moves + 1;
-  //         nd.previous = min;
-  //         pq.insert(nd);
-  //       }
-  //     }
-  //     if (min.board.isGoal()) {
-  //       break;
-  //     }
-  //   }
+    return false;
   }
 
   // is the initial board solvable?
   public boolean isSolvable() {
-    return false;
+    return solvable;
   }
 
   // min number of moves to solve initial board; -1 if no solution
   public int moves() {
-    return 0;
+    if (isSolvable()) return solvedNode.moves;
+    return -1;
   }
 
   // sequence of boards in a shortest solution; null if no solution
   public Iterable<Board> solution() {
-    Queue<Board> bds = new Queue<Board>();
+    if (!isSolvable()) return null;
+
+    Stack<Board> bds = new Stack<Board>();
+    SearchNode node = solvedNode;
+
+    while (true) {
+      bds.push(node.board);
+      if (node.previous == null) break;
+      node = node.previous;
+    }
+
     return bds;
   }
 
@@ -115,18 +115,19 @@ public class Solver {
         blocks[i][j] = in.readInt();
 
     Board initial = new Board(blocks);
-    // Board initialTwin = initial.twin();
 
     // solve the puzzle
     Solver solver = new Solver(initial);
 
     // print solution to standard output
-    if (!solver.isSolvable())
+    if (!solver.isSolvable()) {
       StdOut.println("No solution possible");
+      StdOut.println(solver.solution());
+    }
     else {
       StdOut.println("Minimum number of moves = " + solver.moves());
-      // for (Board board : solver.solution())
-      //   StdOut.println(board);
+      for (Board board : solver.solution())
+        StdOut.println(board);
     }
   }
 

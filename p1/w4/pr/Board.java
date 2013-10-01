@@ -50,7 +50,6 @@ public class Board {
   private int manSteps(int tile, int i, int j) {
     int targetRow = tileToRow(tile);
     int targetColumn = tileToColumn(tile);
-    // StdOut.println("i, j, targetRow, targetColumn: " + i + ", " + j + ", " + targetRow + ", " + targetColumn);
     return Math.abs(targetRow - i) + Math.abs(targetColumn - j);
   }
 
@@ -65,7 +64,7 @@ public class Board {
   // is this board the goal board?
   public boolean isGoal() {
     for (int i = 0; i < N; i++) {
-      for (int j = 0; j < N ; j++) {
+      for (int j = 0; j < N; j++) {
         if (i == N - 1 && j == N - 1) {
           if (tiles[i][j] != 0) return false;
         } else {
@@ -109,6 +108,9 @@ public class Board {
     if (y.getClass() != this.getClass()) return false;
 
     Board that = (Board) y;
+    if (this.tiles.length != that.tiles.length) return false;
+    if (this.tiles[0].length != that.tiles[0].length) return false;
+
     for (int i = 0; i < N; i++) {
       for (int j = 0; j < N; j++) {
         if (this.tiles[i][j] != that.tiles[i][j]) return false;
