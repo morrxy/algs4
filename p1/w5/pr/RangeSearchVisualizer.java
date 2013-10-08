@@ -25,12 +25,12 @@ public class RangeSearchVisualizer {
 
         // initialize the data structures with N points from standard input
         PointSET brute = new PointSET();
-        KdTree kdtree = new KdTree();
+        // KdTree kdtree = new KdTree();
         while (!in.isEmpty()) {
             double x = in.readDouble();
             double y = in.readDouble();
             Point2D p = new Point2D(x, y);
-            kdtree.insert(p);
+            // kdtree.insert(p);
             brute.insert(p);
         }
 
@@ -88,10 +88,10 @@ public class RangeSearchVisualizer {
                 p.draw();
 
             // draw the range search results for kd-tree in blue
-            StdDraw.setPenRadius(.02);
-            StdDraw.setPenColor(StdDraw.BLUE);
-            for (Point2D p : kdtree.range(rect))
-                p.draw();
+            // StdDraw.setPenRadius(.02);
+            // StdDraw.setPenColor(StdDraw.BLUE);
+            // for (Point2D p : kdtree.range(rect))
+            //     p.draw();
 
             StdDraw.show(40);
         }
