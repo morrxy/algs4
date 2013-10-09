@@ -15,23 +15,21 @@ public class KdTree {
     // the right/top subtree
     private Node rt;
 
-    // private int count;
-
-    // public Node(Point2D pt, int c) {
-    //   this.p = pt;
-    //   this.count = c;
-    // }
-
     public Node(Point2D pt) {
       this.p = pt;
     }
-
-    // public Node() {}
+    public Node(Point2D pt, RectHV rectangle) {
+      this.p = pt;
+      this.rect = rectangle;
+    }
+    // public Node(RectHV rec) {
+    //   this.rect = rec;
+    // }
   }
 
   // construct an empty set of points
   public KdTree() {
-    // root = null;
+    // root = new Node(new RectHV(0.0, 0.0, 1.0, 1.0));
   }
 
   // is the set empty?
@@ -41,53 +39,91 @@ public class KdTree {
 
   // number of points in the set
   public int size() {
-    // return size(root);
     return N;
   }
 
-  // private int size(Node x) {
-  //   if (x == null) return 0;
-  //   else return x.count;
-  // }
-
   // add the point p to the set (if it is not already in the set)
   public void insert(Point2D p) {
-    if (p == null || contains(p)) {
-      StdOut.println("not insert: " + p);
-      return;
-    }
+    if (p == null || contains(p)) return;
+    // root = put(root, p, V);
+    root = put2(root, p, V);
     N += 1;
-    root = put(root, p, V);
   }
 
-  private Node put(Node x, Point2D p, String orientation) {
-    if (x == null) return new Node(p);
+  // public void insert2(Point2D p) {
+  //   if (p == null || contains(p)) return;
+  //   root = put2(root, p, V);
+  //   N += 1;
+  // }
+
+  // private Node put(Node x, Point2D p, String orientation) {
+  //   if (x == null) return new Node(p);
+
+  //   int cmp;
+  //   String nextOrientation;
+  //   if (orientation.equals(V)) {
+  //     cmp = Point2D.X_ORDER.compare(p, x.p);
+  //     nextOrientation = H;
+  //   } else {
+  //     cmp = Point2D.Y_ORDER.compare(p, x.p);
+  //     nextOrientation = V;
+  //   }
+
+  //   if (cmp < 0) x.lb = put(x.lb, p, nextOrientation);
+  //   else x.rt = put(x.rt, p, nextOrientation);
+
+  //   return x;
+  // }
+
+  private Node put2(Node x, Point2D p, String orientation) {
+
+    RectHV currentRect;
+    if (size() == 0) currentRect = new RectHV(0.0, 0.0, 1.0, 1.0);
+    else currentRect = makeCurrentRect(x, p, orientation);
+
+    if (x == null) return new Node(p, currentRect);
 
     int cmp;
+    String nextOrientation;
     if (orientation.equals(V)) {
       cmp = Point2D.X_ORDER.compare(p, x.p);
-      orientation = H;
+      nextOrientation = H;
     } else {
       cmp = Point2D.Y_ORDER.compare(p, x.p);
-      orientation = V;
+      nextOrientation = V;
     }
 
-    if (cmp < 0) x.lb = put(x.lb, p, orientation);
-    else x.rt = put(x.rt, p, orientation);
+    if (cmp < 0) x.lb = put2(x.lb, p, nextOrientation);
+    else x.rt = put2(x.rt, p, nextOrientation);
 
-    // x.count = 1 + size(x.lb) + size(x.rt);
     return x;
   }
 
-  // private Node put1(Node x, Point2D p) {
-  //   if (x == null) return new Node(p, 1);
-  //   int cmp = p.compareTo(x.p);
-  //   if      (cmp < 0) x.lb = put(x.lb, p);
-  //   else if (cmp > 0) x.rt = put(x.rt, p);
-  //   else              x.p  = p;
-  //   x.count = 1 + size(x.lb) + size(x.rt);
-  //   return x;
-  // }
+  private RectHV makeCurrentRect(Node x, Point2D p, String orientation) {
+    int cmp;
+    double xmin = x.rect.xmin();
+    double ymin = x.rect.ymin();
+    double xmax = x.rect.xmax();
+    double ymax = x.rect.ymax();
+
+    if (orientation.equals(V)) {
+      cmp = Point2D.X_ORDER.compare(p, x.p);
+      if (cmp < 0) {
+        xmax = p.x();
+      } else {
+        xmin = p.x();
+      }
+    } else {
+      cmp = Point2D.Y_ORDER.compare(p, x.p);
+      if (cmp < 0) {
+        ymax = p.y();
+      } else {
+        ymin = p.y();
+      }
+    }
+
+    return new RectHV(xmin, ymin, xmax, ymax);
+  }
 
   // does the set contain the point p?
   public boolean contains(Point2D p) {
@@ -100,6 +136,7 @@ public class KdTree {
 
   private Point2D get(Node x, Point2D p, String orientation) {
     if (x == null) return null;
+    if (p.equals(x.p)) return x.p;
 
     int cmp;
     if (orientation.equals(V)) {
@@ -112,24 +149,22 @@ public class KdTree {
 
     if (cmp < 0) {
       return get(x.lb, p, orientation);
-    } else if (cmp > 0) {
-      return get(x.rt, p, orientation);
     } else {
-      return x.p;
+      return get(x.rt, p, orientation);
     }
-
   }
 
-  // private Point2D get1(Node x, Point2D p) {
-  //   if (x == null) return null;
-  //   int cmp = p.compareTo(x.p);
-  //   if (cmp < 0) return get(x.lb, p);
-  //   else if (cmp > 0) return get(x.rt, p);
-  //   else return x.p;
-  // }
-
   // draw all of the points to standard draw
-  public void draw() {}
+  public void draw() {
+    draw(root);
+  }
+
+  private void draw(Node x) {
+    if (x == null) return;
+    x.rect.draw();
+    draw(x.lb);
+    draw(x.rt);
+  }
 
   // all points in the set that are inside the rectangle
   public Iterable<Point2D> range(RectHV rect) {
@@ -161,9 +196,10 @@ public class KdTree {
       Point2D p = new Point2D(x, y);
       kdtree.insert(p);
       // if (!kdtree.contains(p)) StdOut.println("wroing at point:" + p);
-      StdOut.println(kdtree.size() + "point: " + p);
+      // StdOut.println(kdtree.size() + "point: " + p);
     }
 
     StdOut.println("after:" + kdtree.size());
+    kdtree.draw();
   }
 }
