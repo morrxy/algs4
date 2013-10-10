@@ -170,6 +170,7 @@ public class KdTree {
   }
 
   private void range(RectHV rect, Node x, Queue<Point2D> q) {
+    if (x == null) return;
     if (!x.rect.intersects(rect)) return;
     if (rect.contains(x.p)) q.enqueue(x.p);
     range(rect, x.lb, q);
@@ -178,7 +179,28 @@ public class KdTree {
 
   // a nearest neighbor in the set to p; null if set is empty
   public Point2D nearest(Point2D p) {
-    return new Point2D(0, 0);
+    // return new Point2D(0, 0);
+    if (size() == 0) return null;
+    return nearest(p, root, p.distanceTo(root.p));
+  }
+
+  private Point2D nearest(Point2D p, Node x, double minDistance) {
+
+    Point2D result = x.p;
+
+    if (x.lb != null) {
+      if (x.lb.rect.distanceTo(p) < minDistance) {
+        if (p.distanceTo(x.lb.p) < minDistance) result = x.lb.p;
+      }
+    }
+
+    if (x.rt != null) {
+      if (x.rt.rect.distanceTo(p) < minDistance) {
+        if (p.distanceTo(x.rt.p) < minDistance) result = x.rt.p;
+      }
+    }
+
+    return result;
   }
 
   public static void main(String[] args) {
