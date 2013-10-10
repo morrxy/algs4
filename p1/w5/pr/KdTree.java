@@ -2,8 +2,8 @@ public class KdTree {
 
   private Node root;
   private int N;
-  private String V = "vertical";
-  private String H = "horizontal";
+  private String V = "verticalLine";
+  private String H = "horizontalLine";
 
   private static class Node {
     // the point
@@ -15,22 +15,14 @@ public class KdTree {
     // the right/top subtree
     private Node rt;
 
-    public Node(Point2D pt) {
-      this.p = pt;
-    }
     public Node(Point2D pt, RectHV rectangle) {
       this.p = pt;
       this.rect = rectangle;
     }
-    // public Node(RectHV rec) {
-    //   this.rect = rec;
-    // }
   }
 
   // construct an empty set of points
-  public KdTree() {
-    // root = new Node(new RectHV(0.0, 0.0, 1.0, 1.0));
-  }
+  public KdTree() {}
 
   // is the set empty?
   public boolean isEmpty() {
@@ -45,83 +37,62 @@ public class KdTree {
   // add the point p to the set (if it is not already in the set)
   public void insert(Point2D p) {
     if (p == null || contains(p)) return;
-    // root = put(root, p, V);
-    root = put2(root, p, V);
+    root = put(root, p, V, null);
     N += 1;
   }
 
-  // public void insert2(Point2D p) {
-  //   if (p == null || contains(p)) return;
-  //   root = put2(root, p, V);
-  //   N += 1;
-  // }
+  private Node put(Node x, Point2D p, String splitLine, Node parent) {
 
-  // private Node put(Node x, Point2D p, String orientation) {
-  //   if (x == null) return new Node(p);
+    RectHV currentRect = makeCurrentRect(parent, p, splitLine);
 
-  //   int cmp;
-  //   String nextOrientation;
-  //   if (orientation.equals(V)) {
-  //     cmp = Point2D.X_ORDER.compare(p, x.p);
-  //     nextOrientation = H;
-  //   } else {
-  //     cmp = Point2D.Y_ORDER.compare(p, x.p);
-  //     nextOrientation = V;
-  //   }
-
-  //   if (cmp < 0) x.lb = put(x.lb, p, nextOrientation);
-  //   else x.rt = put(x.rt, p, nextOrientation);
-
-  //   return x;
-  // }
-
-  private Node put2(Node x, Point2D p, String orientation) {
-
-    RectHV currentRect;
-    if (size() == 0) currentRect = new RectHV(0.0, 0.0, 1.0, 1.0);
-    else currentRect = makeCurrentRect(x, p, orientation);
-
-    if (x == null) return new Node(p, currentRect);
-
-    int cmp;
-    String nextOrientation;
-    if (orientation.equals(V)) {
-      cmp = Point2D.X_ORDER.compare(p, x.p);
-      nextOrientation = H;
-    } else {
-      cmp = Point2D.Y_ORDER.compare(p, x.p);
-      nextOrientation = V;
+    if (x == null) {
+      Node tmpNode = new Node(p, currentRect);
+      // StdOut.println("splitLine: " + splitLine + tmpNode.p.toString() + tmpNode.rect.toString());
+      return tmpNode;
     }
 
-    if (cmp < 0) x.lb = put2(x.lb, p, nextOrientation);
-    else x.rt = put2(x.rt, p, nextOrientation);
+    int cmp;
+    String nextsplitLine;
+    if (splitLine.equals(V)) {
+      cmp = Point2D.X_ORDER.compare(p, x.p);
+      nextsplitLine = H;
+    } else {
+      cmp = Point2D.Y_ORDER.compare(p, x.p);
+      nextsplitLine = V;
+    }
+
+    if (cmp < 0) x.lb = put(x.lb, p, nextsplitLine, x);
+    else x.rt = put(x.rt, p, nextsplitLine, x);
 
     return x;
   }
 
-  private RectHV makeCurrentRect(Node x, Point2D p, String orientation) {
+  private RectHV makeCurrentRect(Node x, Point2D p, String splitLine) {
+    if (x == null) return new RectHV(0.0, 0.0, 1.0, 1.0);
+
     int cmp;
     double xmin = x.rect.xmin();
     double ymin = x.rect.ymin();
     double xmax = x.rect.xmax();
     double ymax = x.rect.ymax();
 
-    if (orientation.equals(V)) {
-      cmp = Point2D.X_ORDER.compare(p, x.p);
-      if (cmp < 0) {
-        xmax = p.x();
-      } else {
-        xmin = p.x();
-      }
-    } else {
+    if (splitLine.equals(V)) {
       cmp = Point2D.Y_ORDER.compare(p, x.p);
       if (cmp < 0) {
-        ymax = p.y();
+        ymax = x.p.y();
       } else {
-        ymin = p.y();
+        ymin = x.p.y();
+      }
+    } else {
+      cmp = Point2D.X_ORDER.compare(p, x.p);
+      if (cmp < 0) {
+        xmax = x.p.x();
+      } else {
+        xmin = x.p.x();
       }
     }
 
+    // StdOut.println("xmin: " + xmin + ", xmax: " + xmax + ", ymin: " + ymin + ", ymax: " + ymax);
     return new RectHV(xmin, ymin, xmax, ymax);
   }
 
@@ -134,42 +105,75 @@ public class KdTree {
     return get(root, p, V);
   }
 
-  private Point2D get(Node x, Point2D p, String orientation) {
+  private Point2D get(Node x, Point2D p, String splitLine) {
     if (x == null) return null;
     if (p.equals(x.p)) return x.p;
 
     int cmp;
-    if (orientation.equals(V)) {
+    if (splitLine.equals(V)) {
       cmp = Point2D.X_ORDER.compare(p, x.p);
-      orientation = H;
+      splitLine = H;
     } else {
       cmp = Point2D.Y_ORDER.compare(p, x.p);
-      orientation = V;
+      splitLine = V;
     }
 
     if (cmp < 0) {
-      return get(x.lb, p, orientation);
+      return get(x.lb, p, splitLine);
     } else {
-      return get(x.rt, p, orientation);
+      return get(x.rt, p, splitLine);
     }
   }
 
   // draw all of the points to standard draw
   public void draw() {
-    draw(root);
+    root.rect.draw();
+    draw(root, V);
   }
 
-  private void draw(Node x) {
+  private void draw(Node x, String splitLine) {
     if (x == null) return;
-    x.rect.draw();
-    draw(x.lb);
-    draw(x.rt);
+
+    // draw point
+    StdDraw.setPenColor(StdDraw.BLACK);
+    StdDraw.setPenRadius(.01);
+    x.p.draw();
+
+    // draw split line
+    StdDraw.setPenRadius();
+    if (splitLine == V) {
+      StdDraw.setPenColor(StdDraw.RED);
+      Point2D p1 = new Point2D(x.p.x(), x.rect.ymin());
+      Point2D p2 = new Point2D(x.p.x(), x.rect.ymax());
+      p1.drawTo(p2);
+    } else {
+      StdDraw.setPenColor(StdDraw.BLUE);
+      Point2D p1 = new Point2D(x.rect.xmin(), x.p.y());
+      Point2D p2 = new Point2D(x.rect.xmax(), x.p.y());
+      p1.drawTo(p2);
+    }
+
+    // set splitLine for next level
+    String nextsplitLine;
+    if (splitLine == V) nextsplitLine = H;
+    else nextsplitLine = V;
+
+    draw(x.lb, nextsplitLine);
+    draw(x.rt, nextsplitLine);
   }
 
   // all points in the set that are inside the rectangle
   public Iterable<Point2D> range(RectHV rect) {
     Queue<Point2D> q = new Queue<Point2D>();
+    range(rect, root, q);
     return q;
+  }
+
+  private void range(RectHV rect, Node x, Queue<Point2D> q) {
+    if (!x.rect.intersects(rect)) return;
+    if (rect.contains(x.p)) q.enqueue(x.p);
+    range(rect, x.lb, q);
+    range(rect, x.rt, q);
   }
 
   // a nearest neighbor in the set to p; null if set is empty
