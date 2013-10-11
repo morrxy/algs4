@@ -186,6 +186,7 @@ public class KdTree {
 
   private Point2D nearest(Point2D p, Node x, double minDistance) {
 
+    //
     Point2D result = x.p;
 
     if (x.lb != null) {
