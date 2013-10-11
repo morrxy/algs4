@@ -180,41 +180,57 @@ public class KdTree {
   // a nearest neighbor in the set to p; null if set is empty
   public Point2D nearest(Point2D p) {
     if (size() == 0) return null;
+    // return nearest(p, root);
     return nearest2(p, root);
   }
 
   private Point2D nearest(Point2D p, Node x) {
     Point2D result = x.p;
+    // StdOut.println(result);
 
-    if (x.lb != null && x.rt == null) {
+    if ((x.lb != null && x.rt == null)
+      && (x.lb.rect.distanceSquaredTo(p) < p.distanceSquaredTo(result))) {
       // only need go lb
-      if (x.lb.rect.distanceTo(p) < p.distanceTo(result)) {
-        Point2D left = nearest(p, x.lb);
-        if (p.distanceTo(left) < p.distanceTo(result)) result = left;
-      }
-    } else if (x.lb == null && x.rt != null) {
+      // StdOut.println("recursion begin");
+      Point2D left = nearest(p, x.lb);
+      if (p.distanceSquaredTo(left) < p.distanceSquaredTo(result)) result = left;
+    }
+
+    if ((x.lb == null && x.rt != null)
+      && (x.rt.rect.distanceSquaredTo(p) < p.distanceSquaredTo(result))) {
       // only need go rt
-      if (x.rt.rect.distanceTo(p) < p.distanceTo(result)) {
-        Point2D right = nearest(p, x.rt);
-        if (p.distanceTo(right) < p.distanceTo(result)) result = right;
-      }
-    } else if (x.lb != null && x.rt != null) {
+      // StdOut.println("recursion begin");
+      Point2D right = nearest(p, x.rt);
+      if (p.distanceSquaredTo(right) < p.distanceSquaredTo(result)) result = right;
+    }
+
+    if (x.lb != null && x.rt != null) {
       // first go near, next go far
-      if ((x.lb.rect.distanceTo(p) < p.distanceTo(result))
-        && (x.rt.rect.distanceTo(p) < p.distanceTo(result))) {
+      if ((x.lb.rect.distanceSquaredTo(p) < p.distanceSquaredTo(result))
+          && (x.rt.rect.distanceSquaredTo(p) < p.distanceSquaredTo(result))) {
 
-        if (x.lb.rect.distanceTo(p) < x.rt.rect.distanceTo(p)) {
+        if (x.lb.rect.distanceSquaredTo(p) < x.rt.rect.distanceSquaredTo(p)) {
+          // StdOut.println(result);
+          // StdOut.println("recursion begin");
           Point2D left = nearest(p, x.lb);
-          if (p.distanceTo(left) < p.distanceTo(result)) result = left;
+          if (p.distanceSquaredTo(left) < p.distanceSquaredTo(result)) result = left;
 
-          Point2D right = nearest(p, x.rt);
-          if (p.distanceTo(right) < p.distanceTo(result)) result = right;
+          if (x.rt.rect.distanceSquaredTo(p) < p.distanceSquaredTo(result)) {
+            // StdOut.println("recursion begin");
+            Point2D right = nearest(p, x.rt);
+            if (p.distanceSquaredTo(right) < p.distanceSquaredTo(result)) result = right;
+          }
         } else {
+          // StdOut.println(result);
+          // StdOut.println("recursion begin");
           Point2D right = nearest(p, x.rt);
-          if (p.distanceTo(right) < p.distanceTo(result)) result = right;
+          if (p.distanceSquaredTo(right) < p.distanceSquaredTo(result)) result = right;
 
-          Point2D left = nearest(p, x.lb);
-          if (p.distanceTo(left) < p.distanceTo(result)) result = left;
+          if (x.lb.rect.distanceSquaredTo(p) < p.distanceSquaredTo(result)) {
+            // StdOut.println("recursion begin");
+            Point2D left = nearest(p, x.lb);
+            if (p.distanceSquaredTo(left) < p.distanceSquaredTo(result)) result = left;
+          }
         }
       }
     }
@@ -224,18 +240,21 @@ public class KdTree {
 
   private Point2D nearest2(Point2D p, Node x) {
     Point2D result = x.p;
+    // StdOut.println(result);
 
     if (x.lb != null) {
-      if (x.lb.rect.distanceTo(p) < p.distanceTo(result)) {
-        Point2D left = nearest(p, x.lb);
-        if (p.distanceTo(left) < p.distanceTo(result)) result = left;
+      if (x.lb.rect.distanceSquaredTo(p) < p.distanceSquaredTo(result)) {
+        // StdOut.println("recursion begin");
+        Point2D left = nearest2(p, x.lb);
+        if (p.distanceSquaredTo(left) < p.distanceSquaredTo(result)) result = left;
       }
     }
 
     if (x.rt != null) {
-      if (x.rt.rect.distanceTo(p) < p.distanceTo(result)) {
-        Point2D right = nearest(p, x.rt);
-        if (p.distanceTo(right) < p.distanceTo(result)) result = right;
+      if (x.rt.rect.distanceSquaredTo(p) < p.distanceSquaredTo(result)) {
+        // StdOut.println("recursion begin");
+        Point2D right = nearest2(p, x.rt);
+        if (p.distanceSquaredTo(right) < p.distanceSquaredTo(result)) result = right;
       }
     }
 
@@ -266,5 +285,9 @@ public class KdTree {
 
     StdOut.println("after:" + kdtree.size());
     kdtree.draw();
+
+    Point2D query = new Point2D(0.81, 0.30);
+    query.draw();
+    kdtree.nearest(query).drawTo(query);
   }
 }
