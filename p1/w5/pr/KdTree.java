@@ -22,7 +22,8 @@ public class KdTree {
   }
 
   // construct an empty set of points
-  public KdTree() {}
+  public KdTree() {
+  }
 
   // is the set empty?
   public boolean isEmpty() {
@@ -47,7 +48,6 @@ public class KdTree {
 
     if (x == null) {
       Node tmpNode = new Node(p, currentRect);
-      // StdOut.println("splitLine: " + splitLine + tmpNode.p.toString() + tmpNode.rect.toString());
       return tmpNode;
     }
 
@@ -92,7 +92,6 @@ public class KdTree {
       }
     }
 
-    // StdOut.println("xmin: " + xmin + ", xmax: " + xmax + ", ymin: " + ymin + ", ymax: " + ymax);
     return new RectHV(xmin, ymin, xmax, ymax);
   }
 
@@ -110,18 +109,19 @@ public class KdTree {
     if (p.equals(x.p)) return x.p;
 
     int cmp;
+    String nextLine;
     if (splitLine.equals(V)) {
       cmp = Point2D.X_ORDER.compare(p, x.p);
-      splitLine = H;
+      nextLine = H;
     } else {
       cmp = Point2D.Y_ORDER.compare(p, x.p);
-      splitLine = V;
+      nextLine = V;
     }
 
     if (cmp < 0) {
-      return get(x.lb, p, splitLine);
+      return get(x.lb, p, nextLine);
     } else {
-      return get(x.rt, p, splitLine);
+      return get(x.rt, p, nextLine);
     }
   }
 
@@ -141,7 +141,7 @@ public class KdTree {
 
     // draw split line
     StdDraw.setPenRadius();
-    if (splitLine == V) {
+    if (splitLine.equals(V)) {
       StdDraw.setPenColor(StdDraw.RED);
       Point2D p1 = new Point2D(x.p.x(), x.rect.ymin());
       Point2D p2 = new Point2D(x.p.x(), x.rect.ymax());
@@ -155,7 +155,7 @@ public class KdTree {
 
     // set splitLine for next level
     String nextsplitLine;
-    if (splitLine == V) nextsplitLine = H;
+    if (splitLine.equals(V)) nextsplitLine = H;
     else nextsplitLine = V;
 
     draw(x.lb, nextsplitLine);
@@ -179,25 +179,63 @@ public class KdTree {
 
   // a nearest neighbor in the set to p; null if set is empty
   public Point2D nearest(Point2D p) {
-    // return new Point2D(0, 0);
     if (size() == 0) return null;
-    return nearest(p, root, p.distanceTo(root.p));
+    return nearest2(p, root);
   }
 
-  private Point2D nearest(Point2D p, Node x, double minDistance) {
+  private Point2D nearest(Point2D p, Node x) {
+    Point2D result = x.p;
 
-    //
+    if (x.lb != null && x.rt == null) {
+      // only need go lb
+      if (x.lb.rect.distanceTo(p) < p.distanceTo(result)) {
+        Point2D left = nearest(p, x.lb);
+        if (p.distanceTo(left) < p.distanceTo(result)) result = left;
+      }
+    } else if (x.lb == null && x.rt != null) {
+      // only need go rt
+      if (x.rt.rect.distanceTo(p) < p.distanceTo(result)) {
+        Point2D right = nearest(p, x.rt);
+        if (p.distanceTo(right) < p.distanceTo(result)) result = right;
+      }
+    } else if (x.lb != null && x.rt != null) {
+      // first go near, next go far
+      if ((x.lb.rect.distanceTo(p) < p.distanceTo(result))
+        && (x.rt.rect.distanceTo(p) < p.distanceTo(result))) {
+
+        if (x.lb.rect.distanceTo(p) < x.rt.rect.distanceTo(p)) {
+          Point2D left = nearest(p, x.lb);
+          if (p.distanceTo(left) < p.distanceTo(result)) result = left;
+
+          Point2D right = nearest(p, x.rt);
+          if (p.distanceTo(right) < p.distanceTo(result)) result = right;
+        } else {
+          Point2D right = nearest(p, x.rt);
+          if (p.distanceTo(right) < p.distanceTo(result)) result = right;
+
+          Point2D left = nearest(p, x.lb);
+          if (p.distanceTo(left) < p.distanceTo(result)) result = left;
+        }
+      }
+    }
+
+    return result;
+  }
+
+  private Point2D nearest2(Point2D p, Node x) {
     Point2D result = x.p;
 
     if (x.lb != null) {
-      if (x.lb.rect.distanceTo(p) < minDistance) {
-        if (p.distanceTo(x.lb.p) < minDistance) result = x.lb.p;
+      if (x.lb.rect.distanceTo(p) < p.distanceTo(result)) {
+        Point2D left = nearest(p, x.lb);
+        if (p.distanceTo(left) < p.distanceTo(result)) result = left;
       }
     }
 
     if (x.rt != null) {
-      if (x.rt.rect.distanceTo(p) < minDistance) {
-        if (p.distanceTo(x.rt.p) < minDistance) result = x.rt.p;
+      if (x.rt.rect.distanceTo(p) < p.distanceTo(result)) {
+        Point2D right = nearest(p, x.rt);
+        if (p.distanceTo(right) < p.distanceTo(result)) result = right;
       }
     }
 
