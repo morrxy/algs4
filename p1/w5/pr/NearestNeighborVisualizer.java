@@ -54,6 +54,10 @@ public class NearestNeighborVisualizer {
             kdtree.nearest(query).draw();
             StdDraw.show(0);
             StdDraw.show(40);
+
+            if (!kdtree.nearest(query).equals(kdtree.nearest(query))) {
+                StdOut.println("wrong");
+            }
         }
     }
 }

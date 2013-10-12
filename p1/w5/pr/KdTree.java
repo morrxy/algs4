@@ -188,14 +188,14 @@ public class KdTree {
     Point2D result = x.p;
 
     if ((x.lb != null && x.rt == null)
-      && (x.lb.rect.distanceSquaredTo(p) < p.distanceSquaredTo(result))) {
+      && (x.lb.rect.distanceSquaredTo(p) <= p.distanceSquaredTo(result))) {
       // only need go lb
       Point2D left = nearest(p, x.lb);
       if (p.distanceSquaredTo(left) < p.distanceSquaredTo(result)) result = left;
     }
 
     if ((x.lb == null && x.rt != null)
-      && (x.rt.rect.distanceSquaredTo(p) < p.distanceSquaredTo(result))) {
+      && (x.rt.rect.distanceSquaredTo(p) <= p.distanceSquaredTo(result))) {
       // only need go rt
       Point2D right = nearest(p, x.rt);
       if (p.distanceSquaredTo(right) < p.distanceSquaredTo(result)) result = right;
@@ -203,22 +203,22 @@ public class KdTree {
 
     if (x.lb != null && x.rt != null) {
       // first go near, next go far
-      if ((x.lb.rect.distanceSquaredTo(p) < p.distanceSquaredTo(result))
-          && (x.rt.rect.distanceSquaredTo(p) < p.distanceSquaredTo(result))) {
+      if ((x.lb.rect.distanceSquaredTo(p) <= p.distanceSquaredTo(result))
+          && (x.rt.rect.distanceSquaredTo(p) <= p.distanceSquaredTo(result))) {
 
-        if (x.lb.rect.distanceSquaredTo(p) < x.rt.rect.distanceSquaredTo(p)) {
+        if (x.lb.rect.distanceSquaredTo(p) <= x.rt.rect.distanceSquaredTo(p)) {
           Point2D left = nearest(p, x.lb);
           if (p.distanceSquaredTo(left) < p.distanceSquaredTo(result)) result = left;
 
-          if (x.rt.rect.distanceSquaredTo(p) < p.distanceSquaredTo(result)) {
+          if (x.rt.rect.distanceSquaredTo(p) <= p.distanceSquaredTo(result)) {
             Point2D right = nearest(p, x.rt);
             if (p.distanceSquaredTo(right) < p.distanceSquaredTo(result)) result = right;
           }
         } else {
           Point2D right = nearest(p, x.rt);
-          if (p.distanceSquaredTo(right) < p.distanceSquaredTo(result)) result = right;
+          if (p.distanceSquaredTo(right) <= p.distanceSquaredTo(result)) result = right;
 
-          if (x.lb.rect.distanceSquaredTo(p) < p.distanceSquaredTo(result)) {
+          if (x.lb.rect.distanceSquaredTo(p) <= p.distanceSquaredTo(result)) {
             Point2D left = nearest(p, x.lb);
             if (p.distanceSquaredTo(left) < p.distanceSquaredTo(result)) result = left;
           }
