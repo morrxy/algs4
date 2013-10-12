@@ -280,5 +280,6 @@ public class KdTree {
     Point2D query = new Point2D(0.81, 0.30);
     query.draw();
     kdtree.nearest(query).drawTo(query);
+
   }
 }
