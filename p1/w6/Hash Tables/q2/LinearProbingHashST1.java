@@ -72,7 +72,7 @@ public class LinearProbingHashST1<Key, Value> {
         if (val == null) delete(key);
 
         // double table size if 50% full
-        if (N >= M/2) resize(2*M);
+        // if (N >= M/2) resize(2*M);
 
         int i;
         for (i = hash(key); keys[i] != null; i = (i + 1) % M) {
@@ -131,7 +131,7 @@ public class LinearProbingHashST1<Key, Value> {
         Queue<Key> queue = new Queue<Key>();
         for (int i = 0; i < M; i++)
             if (keys[i] != null) {
-                StdOut.println(keys[i]);
+                StdOut.print(keys[i] + " ");
                 queue.enqueue(keys[i]);
             }
         return queue;
@@ -163,17 +163,17 @@ public class LinearProbingHashST1<Key, Value> {
     *  Unit test client.
     ***********************************************************************/
     public static void main(String[] args) {
-        LinearProbingHashST1<String, Integer> st = new LinearProbingHashST1<String, Integer>(2000);
+        LinearProbingHashST1<String, Integer> st = new LinearProbingHashST1<String, Integer>(10);
         for (int i = 0; !StdIn.isEmpty(); i++) {
             String key = StdIn.readString();
             st.put(key, i);
         }
 
         // print keys
+        StdOut.println("begin:");
         for (String s : st.keys()) {}
             // StdOut.println(s + " " + st.get(s));
 
 
-        // StdOut.println("begin:");
     }
 }

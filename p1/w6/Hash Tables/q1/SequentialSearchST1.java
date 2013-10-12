@@ -109,7 +109,7 @@ public class SequentialSearchST1<Key, Value> {
      */
     public Value get(Key key) {
         for (Node x = first; x != null; x = x.next) {
-            StdOut.println(x.key);
+            StdOut.print(x.key + " ");
             if (key.equals(x.key)) return x.val;
         }
         return null;

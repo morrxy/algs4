@@ -133,8 +133,8 @@ public class SeparateChainingHashST1<Key, Value> {
             StdOut.println(s + " " + st.hash(s) + " " + st.get(s));
 
         // StdOut.println(st.hash("B"));
-        StdOut.println("search B:");
-        StdOut.println(st.get("B"));
+        StdOut.println("search P:");
+        StdOut.println(st.get("P"));
     }
 
 }
