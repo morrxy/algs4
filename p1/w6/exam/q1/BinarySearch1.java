@@ -55,10 +55,12 @@ public class BinarySearch1 {
         while (lo <= hi) {
             // Key is in a[lo..hi] or not present.
             int mid = lo + (hi - lo) / 2;
+            StdOut.print(a[mid] + " ");
             if      (key < a[mid]) hi = mid - 1;
             else if (key > a[mid]) lo = mid + 1;
             else return mid;
         }
+        StdOut.println();
         return -1;
     }
 
@@ -76,11 +78,17 @@ public class BinarySearch1 {
         // sort the array
         Arrays.sort(whitelist);
 
-        // read key; print if not in whitelist
         while (!StdIn.isEmpty()) {
             int key = StdIn.readInt();
-            if (rank1(key, whitelist) == -1)
-                StdOut.println(key);
+            rank1(key, whitelist);
+            // StdOut.println(rank1(key, whitelist));
         }
+
+        // read key; print if not in whitelist
+        // while (!StdIn.isEmpty()) {
+        //     int key = StdIn.readInt();
+        //     if (rank1(key, whitelist) == -1)
+        //         StdOut.println(key);
+        // }
     }
 }
