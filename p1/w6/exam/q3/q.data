@@ -1,0 +1,51 @@
+ 0   DOOM    DOOM    WHAM    CAKE    AQUA    BUSH    AQUA    AQUA    BECK    AQUA    AQUA
+ 1   BUSH    BUSH    TACO    UB40    BECK    CAKE    BECK    BECK    BUSH    BUSH    BECK
+ 2   CAKE    CAKE    UB40    BUSH    BUSH    BECK    BUSH    BUSH    CAKE    CAKE    BUSH
+ 3   BECK    AQUA    MUSE    PINK    CAKE    CHER    CAKE    CAKE    DOOM    BECK    CAKE
+ 4   MOBY    KISS    PINK    DOOM    DOOM    DEVO    CHER    DOOM    AQUA    CHER    CHER
+ 5   UB40    CHER    TOTO    KISS    FIXX    AQUA    DEVO    KISS    MOBY    DEVO    DEVO
+ 6   STYX    DEVO    STYX    BECK    KISS    DOOM    DOOM    LARD    STYX    DOOM    DOOM
+ 7   AQUA    BECK    MIMS    STYX    KMAG    KISS    FIXX    MOBY    UB40    STYX    FIXX
+ 8   KISS    KMAG    KISS    AQUA    LARD    LARD    KISS    NENA    KISS    KISS    KISS
+ 9   LARD    FIXX    NOFX    NENA    MIMS    PINK    KMAG    PINK    LARD    LARD    KMAG
+10   PINK    LARD    MOBY    MOBY    MOBY    NENA    LARD    STYX    NENA    PINK    LARD
+11   NENA    MIMS    NENA    LARD    NENA    KMAG    LIVE    UB40    PINK    NENA    LIVE
+12   KMAG    MOBY    KMAG    KMAG    PINK    FIXX    PINK    FIXX    FIXX    KMAG    MIMS
+13   FIXX    LIVE    FIXX    FIXX    RUSH    RUSH    STYX    KMAG    KMAG    FIXX    MOBY
+14   RUSH    PINK    RUSH    RUSH    STYX    MIMS    RUSH    MIMS    MIMS    RUSH    MUSE
+15   MIMS    NENA    BECK    MIMS    UB40    WHAM    MIMS    MUSE    RUSH    MIMS    NENA
+16   WHAM    NOFX    AQUA    WHAM    WHAM    MUSE    WHAM    RUSH    DEVO    WHAM    NOFX
+17   MUSE    MUSE    BUSH    MUSE    MUSE    TACO    MUSE    WHAM    MUSE    MUSE    PINK
+18   TACO    RUSH    DOOM    TACO    TACO    STYX    TACO    CHER    TACO    TACO    RUSH
+19   DEVO    STYX    DEVO    DEVO    DEVO    NOFX    UB40    DEVO    WHAM    UB40    STYX
+20   NOFX    WHAM    LARD    NOFX    NOFX    LIVE    NOFX    LIVE    CHER    NOFX    TACO
+21   LIVE    TACO    LIVE    LIVE    LIVE    UB40    NENA    NOFX    LIVE    LIVE    TOTO
+22   CHER    UB40    CHER    CHER    CHER    TOTO    MOBY    TACO    NOFX    MOBY    UB40
+23   TOTO    TOTO    CAKE    TOTO    TOTO    MOBY    TOTO    TOTO    TOTO    TOTO    WHAM
+
+                                      s               s      s,n             s,n
+
+
+ 0.  Original input
+ 1.  Selection sort
+ 2.  Insertion sort
+ 3.  Shellsort (with 3x + 1 increment sequence)
+ 4.  Mergesort (top-down)
+ 5.  Mergesort (bottom-up)
+ 6.  Quicksort (standard, no shuffle)
+ 7.  Quicksort (3-way, no shuffle)
+ 8.  Heapsort
+ 9.  Knuth shuffle
+10.  Sorted
+
+Selection sort
+Algorithm.  ↑ scans from left to right.
+Invariants.
+・ Entries the left of ↑ (including ↑) fixed and in ascending order.
+・ No entry to right of ↑ is smaller than any entry to the left of ↑.
+
+Insertion sort
+Algorithm.  ↑ scans from left to right.
+Invariants.
+・ Entries to the left of ↑ (including ↑) are in ascending order.
+・ Entries to the right of ↑ have not yet been seen.
