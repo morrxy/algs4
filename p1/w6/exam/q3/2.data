@@ -1,0 +1,60 @@
+ 0    lifo    heap    byte    lifo    byte    byte    java    trie    lazy    heap    byte
+ 1    heap    left    find    path    ceil    find    byte    time    heap    lifo    ceil
+ 2    path    java    heap    size    find    heap    leaf    size    left    node    find
+ 3    node    ceil    lifo    rank    heap    lazy    ceil    rank    java    path    heap
+ 4    push    byte    loop    byte    java    leaf    lazy    swim    ceil    byte    java
+ 5    byte    less    node    find    lazy    less    heap    sink    byte    push    lazy
+ 6    trie    find    path    heap    leaf    lifo    left    path    less    find    leaf
+ 7    find    leaf    push    sort    left    link    find    less    find    trie    left
+ 8    rank    lazy    rank    loop    less    loop    lifo    node    leaf    rank    less
+ 9    sort    lifo    size    push    lifo    node    link    sort    lifo    sort    lifo
+10    loop    size    sort    node    link    path    less    prim    loop    loop    link
+11    size    loop    trie    trie    load    push    path    lifo    size    size    load
+12    lazy    link    ceil    lazy    sort    rank    node    lazy    sort    lazy    loop
+13    link    sort    java    link    loop    size    load    link    link    link    node
+14    leaf    rank    lazy    leaf    trie    sort    loop    leaf    rank    leaf    path
+15    less    trie    leaf    less    rank    trie    sink    find    trie    less    prim
+16    ceil    push    less    ceil    node    ceil    prim    ceil    push    ceil    push
+17    java    time    link    java    push    java    push    java    node    java    rank
+18    time    node    left    time    time    time    sort    heap    time    left    sink
+19    left    swim    load    left    path    left    size    left    path    time    size
+20    swim    prim    prim    swim    swim    swim    swim    push    swim    prim    sort
+21    prim    load    sink    prim    prim    prim    rank    loop    prim    swim    swim
+22    load    sink    swim    load    size    load    time    load    load    load    time
+23    sink    path    time    sink    sink    sink    trie    byte    sink    sink    trie
+
+       0       7       4       9       1       2        3       8      6       5       10
+       ___     ___     ___     ___     ___     ___     ___     ___     ___     ___     ___
+
+ 0.  Original input
+ 1.  Selection sort
+ 2.  Insertion sort
+ 3.  Shellsort (with 3x + 1 increment sequence)
+ 4.  Mergesort (top-down)
+ 5.  Mergesort (bottom-up)
+ 6.  Quicksort (standard, no shuffle)
+ 7.  Quicksort (3-way, no shuffle)
+ 8.  Heapsort
+ 9.  Knuth shuffle
+10.  Sorted
+
+lifo heap path node push byte trie find rank sort loop size lazy link leaf less ceil java time left swim prim load sink
+v
+
+heap lifo path node push byte trie find rank sort loop size lazy link leaf less ceil java time left swim prim load sink
+
+heap lifo sink node push byte trie find rank sort loop size lazy link leaf less ceil java time left swim prim load path
+
+heap lifo load node push byte trie find rank sort loop size lazy link leaf less ceil java time left swim prim sink path
+
+heap lifo prim node push byte trie find rank sort loop size lazy link leaf less ceil java time left swim load sink path
+
+heap lifo swim node push byte trie find rank sort loop size lazy link leaf less ceil java time left prim load sink path
+
+heap lifo left node push byte trie find rank sort loop size lazy link leaf less ceil java time swim prim load sink path
+
+heap left lifo node push byte trie find rank sort loop size lazy link leaf less ceil java time swim prim load sink path
+
+heap left lifo time push byte trie find rank sort loop size lazy link leaf less ceil java node swim prim load sink path
+
+heap left java lifo push byte trie find rank sort loop size lazy link leaf less ceil time node swim prim load sink path
